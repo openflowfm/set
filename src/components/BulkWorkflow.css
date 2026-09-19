@@ -1,0 +1,72 @@
+/* --- bulk workflows ----------------------------------------------- */
+
+/* Two modals over the whole set: the running order, and coloring by rule. They
+   share a row shape on purpose — a song reads the same in both, and in the
+   grid's header, because they're the same list of songs seen three ways. */
+
+.order-rows,
+.color-rows {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  /* A hundred songs is a long list, so it scrolls inside the modal rather than
+     pushing the actions off screen. Same trade as the songs table. */
+  max-height: 46vh;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+}
+.order-row,
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 4px 8px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  color: var(--ui);
+  border-bottom: 1px solid var(--bd2);
+}
+.order-row:last-child,
+.color-row:last-child {
+  border-bottom: none;
+}
+.order-row .song,
+.color-row .song {
+  color: var(--fg);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-row .count,
+.color-row .count {
+  color: var(--caption);
+  flex: none;
+}
+/* The same slots the song header uses, at the same widths, so bpm and key line
+   up down the list the way they line up down the grid. */
+.order-row .facts,
+.color-row .facts {
+  display: flex;
+  flex: none;
+}
+.order-row .facts .bpm,
+.color-row .facts .bpm {
+  width: 26px;
+  text-align: right;
+}
+.order-row .facts .key,
+.color-row .facts .key {
+  width: 30px;
+  text-align: right;
+  color: var(--detail);
+}
+/* Last, so it wins the tie with `.key` above — a song that states nothing is
+   not a song whose scenes disagree. */
+.order-row .facts .none,
+.color-row .facts .none {
+  color: var(--caption);
+}
+

@@ -1,0 +1,201 @@
+/* --- header ------------------------------------------------------- */
+
+/* Sized to its controls and nothing else: --ctl-h plus 6px of air either side,
+   then the 1px bottom border. Keeping the border outside that content height
+   gives flex centering an even 12px to divide instead of a half-pixel result. */
+header {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  height: calc(var(--ctl-h) + 13px);
+  background: var(--surface-control);
+  border-bottom: 1px solid var(--bd);
+  flex: none;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.header-left,
+.header-right {
+  gap: 10px;
+}
+.header-left {
+  gap: 8px;
+  overflow: hidden;
+}
+.header-center {
+  justify-content: center;
+}
+.header-right {
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  display: block;
+  height: var(--ctl-h);
+  width: auto;
+  flex: none;
+}
+
+/* App-only song display controls are the first shared group after the logo. */
+.view-controls .control-button {
+  color: var(--detail);
+}
+.view-controls .control-button:hover:not(:disabled) {
+  color: var(--fg);
+}
+
+/* --- Live control bar --------------------------------------------- */
+
+.live-controls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+}
+.tempo-group {
+  flex: none;
+}
+.tempo-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 62px;
+  height: calc(var(--ctl-h) - 2px);
+  flex: none;
+}
+.tempo-control input {
+  min-width: 0;
+  /* Six monospace characters hold the full `999.00` shape. Shorter values
+     stay right-aligned, so every decimal point lands in the same column. */
+  width: calc(6ch + 9px);
+  height: 100%;
+  flex: none;
+  padding: 0 3px 0 6px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  outline: none;
+}
+/* Browser steppers cost most of this compact field and Live's own control is
+   committed as a typed number, so keep the input numeric without drawing them. */
+.tempo-control input::-webkit-inner-spin-button,
+.tempo-control input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+.tempo-control input:focus-visible {
+  box-shadow: var(--ring) var(--amber-muted);
+}
+.tempo-control > .tempo-unit {
+  width: 13px;
+  margin-right: 4px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--caption);
+  pointer-events: none;
+}
+.tempo-unit svg {
+  width: 10px;
+  height: 10px;
+}
+.tempo-control input:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.tempo-group .control-button {
+  width: 28px;
+  color: var(--detail);
+}
+
+/* --- icon buttons ------------------------------------------------- */
+
+/* Standalone controls in the right section use the same toolbar height as the
+   grouped controls. Group children already fill their group's inner height. */
+.header-right > .control-button {
+  height: var(--ctl-h);
+}
+
+/* --- playback ----------------------------------------------------- */
+
+.arrangement-position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--ctl-h);
+  min-width: 98px;
+  padding: 0 8px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--sel);
+  color: var(--ui);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums;
+}
+.position-field {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: right;
+}
+.position-separator {
+  padding: 0 4px;
+  color: var(--caption);
+}
+
+.playback .control-button {
+  width: 28px;
+  color: var(--detail);
+}
+.playback .control-button:hover:not(:disabled) {
+  color: var(--fg);
+}
+.playback .control-button.rolling {
+  color: var(--green);
+}
+/* Live's own Arrangement Record is red when armed, and the group already
+   carries a second state color in the rolling play button — so the amber every
+   other header toggle lights doesn't apply here. */
+.playback .control-button.control-button-toggle.control-button-on {
+  color: var(--red);
+}
+.playback .control-button.control-button-toggle.control-button-on:hover:not(:disabled) {
+  color: var(--red);
+}
+
+.quantization-picker {
+  width: 60px;
+}
+.root-picker {
+  width: 42px;
+}
+.scale-picker {
+  width: 110px;
+}
+.scale-group {
+  flex: none;
+}
+.scale-group > .control-button {
+  color: var(--detail);
+}

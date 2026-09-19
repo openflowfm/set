@@ -1,0 +1,20 @@
+.swatches {
+  display: grid;
+  /* Live's palette is ordered row-major as a continuous hue sweep. Fourteen
+     columns preserve those intended row breaks; ten made each new row jump. */
+  grid-template-columns: repeat(14, 1fr);
+  gap: 4px;
+}
+.sw {
+  height: 18px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+}
+.sw:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.sw.on {
+  border: 2px solid var(--amber);
+}

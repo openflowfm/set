@@ -1,0 +1,80 @@
+.set-config-modal {
+  width: 480px;
+}
+.set-config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--bd);
+}
+.set-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.set-config-field > span {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  color: var(--caption);
+  text-transform: uppercase;
+}
+.set-config-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.set-config-toggle > span {
+  color: var(--ui);
+}
+.set-config-fill-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.set-config-fill-summary .bad {
+  color: var(--amber);
+}
+.role-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.role-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.role-row input[type='text'] {
+  flex: 1;
+}
+/* Blank, duplicate or illegal — Save is disabled while any row is marked. */
+.role-row.bad input[type='text'] {
+  border-color: var(--red);
+}
+.sw.role-sw {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  background: var(--bd3);
+}
+.sw.role-sw.empty {
+  background: transparent;
+  border: 1px dashed var(--caption);
+}
+.role-row .used {
+  width: 34px;
+  flex: none;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  color: var(--caption);
+}
+.role-row .x {
+  padding: 4px 8px;
+  border-color: transparent;
+  color: var(--caption);
+}
+.role-row .x:hover {
+  color: var(--red);
+}

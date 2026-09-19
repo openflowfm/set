@@ -1,0 +1,151 @@
+.eq8-device .wdg-device-name {
+  font-weight: var(--weight-strong);
+}
+
+.eq8-device .wdg-device-body {
+  padding: 3px 4px;
+}
+
+.eq8-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-radius);
+  background: var(--wdg-face);
+  color: var(--wdg-text);
+  font: 8px/1 var(--wdg-sans);
+  cursor: pointer;
+}
+
+.eq8-icon:hover {
+  border-color: var(--wdg-edge-live);
+  color: var(--wdg-marker);
+}
+
+.eq8-icon svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.eq8-status {
+  color: var(--wdg-fill);
+  font-size: var(--text-annot);
+}
+
+.eq8-save {
+  width: 6px;
+  height: 7px;
+  border: 1px solid currentColor;
+}
+
+.eq8-more {
+  letter-spacing: var(--track-tight);
+}
+
+.eq8-panel {
+  --wdg-gap: 1px;
+  --eq8-gutter: 5px;
+  --eq8-band-field: 38px;
+  --eq8-side-field: 48px;
+
+  grid-template-rows: 57px 57px 68px;
+  row-gap: 0;
+}
+
+.eq8-band,
+.eq8-side {
+  overflow: hidden;
+  padding: 0 calc(var(--eq8-gutter) - 1px);
+  border: 1px solid var(--wdg-edge);
+  border-radius: var(--wdg-plate-radius);
+  background: var(--wdg-well);
+}
+
+.eq8-band {
+  --wdg-number-width: var(--eq8-band-field);
+  --wdg-select-width: var(--eq8-band-field);
+
+  width: calc(var(--eq8-band-field) + 2 * var(--eq8-gutter));
+}
+
+.eq8-band > .wdg-knob {
+  align-self: stretch;
+  justify-content: center;
+}
+
+.eq8-band-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wdg-gap);
+  min-height: 0;
+}
+
+.eq8-band-switch {
+  --wdg-toggle-width: var(--wdg-field-height);
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--wdg-text);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-control);
+}
+
+.eq8-side {
+  --wdg-number-width: var(--eq8-side-field);
+  --wdg-select-width: var(--eq8-side-field);
+  --wdg-toggle-width: var(--eq8-side-field);
+
+  width: calc(var(--eq8-side-field) + 2 * var(--eq8-gutter));
+}
+
+.eq8-side > * {
+  grid-row: 1 / -1;
+}
+
+.eq8-side-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  min-height: 0;
+}
+
+.eq8-side-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wdg-gap);
+}
+
+.eq8-view-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--wdg-gap);
+  width: var(--eq8-side-field);
+  height: calc(11px + var(--wdg-gap) + var(--wdg-field-height));
+}
+
+.eq8-view-buttons .eq8-icon {
+  width: 100%;
+  height: var(--wdg-field-height);
+}
+
+.eq8-view-buttons .eq8-icon:last-child {
+  border-color: var(--wdg-fill);
+  background: var(--wdg-fill);
+  color: var(--wdg-fill-text);
+}

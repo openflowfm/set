@@ -1,0 +1,84 @@
+/* --- role menu ---------------------------------------------------- */
+
+/* The picker that hangs off a scene's role chip. A full-screen backdrop rather
+   than a document click listener: it catches the click that closes the menu
+   before anything underneath can act on it, so dismissing it can't also fire a
+   scene or move the selection. Transparent — the grid behind is what you're
+   reading while you tag, and dimming it would be a modal, which this isn't. */
+.menu {
+  width: 190px;
+  background: var(--panel);
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* The one place in the app with a drop shadow. It's the only thing that
+     floats over the grid, and it has to read as above it rather than in it. */
+  box-shadow: var(--shadow-menu);
+}
+.menu-h {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--caption);
+  padding: 2px 6px 4px;
+}
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+/* Rows, not chips: a menu is read down its left edge, so the dots line up in a
+   column and the names start on one line. */
+.menu-item,
+.menu-manage {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  font-size: var(--text-body);
+  line-height: 15px;
+  text-align: left;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+/* Keyboard and pointer land on the same highlight — the cursor follows the
+   mouse, so there's never two "here"s at once. */
+.menu-item.cursor:not(:disabled) {
+  background: var(--sel);
+  color: var(--fg);
+}
+.menu-item.on {
+  color: var(--amber);
+}
+.menu-item .menu-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.menu-item .menu-tick {
+  flex: none;
+  font-size: var(--text-label);
+  color: var(--amber);
+}
+.menu-item.clear {
+  color: var(--caption);
+}
+.menu-rule {
+  border-top: 1px solid var(--bd);
+  margin: 4px 0 2px;
+}
+/* Ruled off from the picks above it: everything up there writes a tag on a
+   scene, this opens an editor. Same row shape so the menu stays one column. */
+.menu-manage {
+  color: var(--caption);
+}
+.menu-manage:hover:not(:disabled) {
+  background: var(--sel);
+}

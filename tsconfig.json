@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "bench/**/*.ts",
+    "bench/**/*.tsx",
+    "vite.config.ts",
+    "vite.bench.config.ts",
+    "vitest.config.ts",
+    "tools/**/*.ts",
+    "node_modules/@openflow/protocol/global.d.ts",
+    "types/assets.d.ts"
+  ]
+}

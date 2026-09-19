@@ -1,0 +1,48 @@
+.new-song-modal {
+  width: 420px;
+}
+.new-song-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.new-song-field > span {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  color: var(--caption);
+  text-transform: uppercase;
+}
+.new-song-field.bad input,
+.new-song-field.bad select {
+  border-color: var(--red);
+}
+.new-song-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 31px;
+  gap: 8px;
+}
+.new-song-color .color-select {
+  width: 31px;
+  height: 31px;
+}
+.new-song-field select {
+  width: 100%;
+  height: 31px;
+  padding: 0 8px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+}
+.new-song-field select:focus {
+  outline: none;
+  border-color: var(--focus);
+}
+.new-song-modal > .hint.bad {
+  color: var(--red);
+}

@@ -1,0 +1,222 @@
+@import '@openflow/widgets/palette.css';
+
+:root {
+  --surface-song-hover: #141418;
+
+  /* Root-level stacking tiers. Values between these anchors belong only to
+     the named surface's internal ordering; component-local paint layers can
+     continue to use small integers inside their own stacking context. */
+  --layer-grid-header: 1;
+  --layer-footer: 3;
+  --layer-pinned: 10;
+  --layer-pinned-corner: 20;
+  --layer-mixer: 100;
+  --layer-mixer-corner: 102;
+  --layer-overlay: 200;
+  --layer-modal: 300;
+
+  /* Fallbacks only — ClipGrid sets both on the table from lib/columnWidth.ts.
+     Kept here so the grid still lays out if it ever renders without them.
+     `--col-w` matches the `m` preset and is the only one a width mode moves;
+     `--meta-col-w` is a constant there. The Master column takes `--col-w` like
+     any track. */
+  --col-w: 74px;
+  --meta-col-w: 108px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  height: 100vh;
+  overflow: hidden;
+
+  /* The whole app is a click surface, not a document. ⇧-click extends a block
+     and ⇧ is also the browser's own "extend the text selection", so without
+     this every range gesture drags a blue smear across the scene names it just
+     selected. Nothing here is prose; the two places that are get it back below. */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The exceptions, both because you'd want to copy out of them: fields you type
+   into, and the log — an error message you can't select is one you retype by
+   hand into a bug report. */
+input,
+textarea,
+footer {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.lbl {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-caps);
+  color: var(--caption);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* The rail edits two related scopes. Their headings keep the scope on the
+   left and the live selection on the right without spending a second row. */
+.facet-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--ui);
+}
+.facet-summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--caption);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-none);
+  text-transform: none;
+}
+
+.hint {
+  font-size: var(--text-control);
+  color: var(--caption);
+  line-height: 1.5;
+}
+.hint .bad {
+  color: var(--red);
+}
+.hint .preview {
+  font-variation-settings: var(--mono-axes);
+  color: var(--preview);
+}
+.caption {
+  color: var(--caption);
+}
+
+input[type='text'] {
+  background: var(--surface-control);
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  padding: 7px 9px;
+  color: var(--fg);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-lead);
+  width: 100%;
+}
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--focus);
+}
+
+.rule {
+  border-top: 1px solid var(--bd);
+  margin: 4px 0;
+}
+
+.viewport-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-overlay);
+}
+
+.modal-back {
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  position: relative;
+  z-index: var(--layer-modal);
+  width: 440px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.modal-h {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--ui);
+}
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.modal.wide {
+  width: 680px;
+}
+
+.flag {
+  font-size: var(--text-label);
+  padding: 1px 5px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-pill);
+  color: var(--detail);
+}
+
+.color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  flex: none;
+  background: var(--bd3);
+}
+.color-dot.empty {
+  background: transparent;
+  border: 1px solid var(--caption);
+}
+
+::-webkit-scrollbar {
+  width: var(--scroll-size);
+  height: var(--scroll-size);
+}
+::-webkit-scrollbar-thumb {
+  border: var(--scroll-inset) solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--idle);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  border-width: calc(var(--scroll-inset) - 1px);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--focus);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--detail);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

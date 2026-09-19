@@ -1,0 +1,38 @@
+/* --- rail --------------------------------------------------------- */
+
+/* The rail's own head: what it is, and the way out. It's a workspace rather
+   than chrome — closed, the grid gets the 264px back — and clicking a clip, a
+   scene or a song opens it again, so nothing can get stranded shut. */
+.rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Pulled up into the aside's own padding: the head is a title for what
+     follows, not a band of its own. */
+  margin: -2px 0 -2px;
+}
+button.icon {
+  padding: 0 4px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--caption);
+  font-size: var(--text-heading);
+  line-height: 16px;
+}
+button.icon:hover {
+  color: var(--fg);
+  background: var(--sel);
+}
+
+aside {
+  width: 264px;
+  flex: none;
+  border-left: 1px solid var(--bd);
+  background: var(--rail);
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 10px;
+  overflow: auto;
+}

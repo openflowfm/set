@@ -1,0 +1,147 @@
+/* --- shared controls ---------------------------------------------- */
+
+.control-button {
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-lead);
+  padding: 6px 12px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ui);
+  cursor: pointer;
+  text-align: center;
+}
+.control-button:hover:not(:disabled) {
+  border-color: var(--focus);
+  color: var(--fg);
+}
+.control-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.control-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  padding: 0;
+}
+.control-button-filled {
+  background: var(--sel);
+}
+.control-button-primary {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: var(--bg);
+  font-weight: var(--weight-strong);
+}
+.control-button-primary:hover:not(:disabled) {
+  border-color: var(--amber-hover);
+  background: var(--amber-hover);
+}
+.control-button-toggle.control-button-on {
+  background: var(--sel);
+  color: var(--amber);
+}
+
+/* A group owns the one outer border and the dividers. Its children own only
+   their content, so buttons, selects and fields align without restating this
+   shell in every toolbar. Component CSS may override the custom properties. */
+.control-group {
+  --control-group-border: var(--bd3);
+  --control-group-background: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  height: var(--ctl-h);
+  flex: none;
+  border: 1px solid var(--control-group-border);
+  border-radius: var(--radius-md);
+  background: var(--control-group-background);
+  overflow: hidden;
+}
+.control-group-filled {
+  --control-group-background: var(--sel);
+}
+.control-group-bare {
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+.control-group:not(.control-group-bare)
+  > :is(.control-button, .control-select, .control-field) {
+  height: 100%;
+  flex: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.control-group:not(.control-group-bare)
+  > :is(.control-button, .control-select, .control-field)
+  + * {
+  border-left: 1px solid var(--control-group-border);
+}
+.control-group:not(.control-group-bare) > .control-button:hover:not(:disabled) {
+  border-color: var(--control-group-border);
+}
+
+.control-select {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: var(--ctl-h);
+  flex: none;
+}
+.control-select select {
+  display: block;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px 0 8px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--sel);
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-slight);
+  cursor: pointer;
+  outline: none;
+}
+.control-select select:hover:not(:disabled) {
+  border-color: var(--focus);
+  color: var(--ui);
+}
+.control-select select:focus-visible {
+  border-color: var(--amber-muted);
+  box-shadow: var(--ring-out) var(--amber-muted);
+}
+.control-select select:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.control-select-caret {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--detail);
+  border-bottom: 1px solid var(--detail);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.control-group:not(.control-group-bare) > .control-select select {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.control-group:not(.control-group-bare) > .control-select select:focus-visible {
+  box-shadow: var(--ring) var(--amber-muted);
+}

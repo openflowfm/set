@@ -1,0 +1,81 @@
+.color-row.skipped .song {
+  color: var(--detail);
+}
+.color-row .arrow {
+  color: var(--caption);
+  flex: none;
+}
+/* Beside a name rather than in a picker, so it's a reading of the row and not
+   something to press. */
+.sw.small {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  background: var(--bd3);
+}
+/* No color at all — which is not palette slot 0. Hollow, so "none" can't read
+   as a dark color somebody chose. */
+.sw.small.empty {
+  background: transparent;
+  border: 1px dashed var(--caption);
+}
+.sw.small.clash {
+  background: transparent;
+  border: 1px solid var(--amber);
+}
+/* A song the rule left alone. Nothing where the new color would be — an empty
+   swatch means "no color", which is something this could write and isn't what
+   is about to happen here. */
+.sw.small.unchanged {
+  background: transparent;
+  border: none;
+}
+/* A color the rule may not hand out. Dimmed rather than dropped: the grid is
+   Live's own picker, and its layout is how you find a color in it. */
+.sw.out {
+  opacity: 0.22;
+}
+
+/* One row of choices where only one can be on — the coloring rule. Same
+   lit-when-on treatment as the width presets, unsegmented because `roll again`
+   sits beside them and isn't one of the choices. */
+.control-group.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.choices button {
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  padding: 5px 10px;
+  color: var(--caption);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  color: var(--detail);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lbl .link {
+  border: none;
+  background: none;
+  padding: 0 0 0 10px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--amber);
+}

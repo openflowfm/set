@@ -1,0 +1,77 @@
+/* --- layout ------------------------------------------------------- */
+
+main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.grid-wrap {
+  flex: 1;
+  overflow: auto;
+  /* No horizontal padding: the song column owns the left edge and the final
+     track owns the right. No padding-top either: the sticky header pins below
+     it, so any padding there is a band where scrolled cells show through. The
+     permanent stop row now owns the bottom edge too, replacing the old 12px
+     breathing room that would leave it floating above the app footer. */
+  padding: 0;
+}
+
+/* The seam where the grid meets the bottom chrome. The strip is one line tall
+   and the same near-black as everything else, so a 1px border alone doesn't
+   read as an edge with clip cells scrolling under it — the shadow is what says
+   the grid continues behind.
+
+   Only whichever element *directly* follows the grid casts it: the log when
+   it's open, the stats strip when it isn't. Putting it on both would paint the
+   strip's shadow across the bottom of the log. Positioned so the shadow lands
+   over the rows rather than under them. */
+main + footer,
+main + .stats {
+  position: relative;
+  z-index: var(--layer-footer);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Scoped: `empty` is also a modifier on dots and swatches, and a bare `.empty`
+   here lands its 60px padding on them. */
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--detail);
+  font-size: var(--text-lead);
+  line-height: 1.7;
+}
+.empty-state b {
+  color: var(--amber);
+  font-weight: var(--weight-strong);
+}
+/* A header glyph quoted mid-sentence, so it needs the text's baseline rather
+   than the line box's bottom. */
+.inline-glyph {
+  display: inline-flex;
+  vertical-align: -0.2em;
+}
+
+/* --- log ---------------------------------------------------------- */
+
+footer {
+  flex: none;
+  max-height: 108px;
+  overflow: auto;
+  border-top: 1px solid var(--bd);
+  background: var(--rail);
+  padding: 8px 16px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  line-height: 1.7;
+}
+.log-line {
+  color: var(--detail);
+}
+.log-line.ok {
+  color: var(--green);
+}
+.log-line.error {
+  color: var(--red);
+}

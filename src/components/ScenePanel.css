@@ -1,0 +1,115 @@
+/* --- scene title -------------------------------------------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0; /* or a flex child refuses to shrink below its input's width */
+}
+.field > span {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  color: var(--caption);
+  text-transform: uppercase;
+}
+.field.bad input[type='text'] {
+  border-color: var(--red);
+}
+/* The compact song facts share a row beneath the title. */
+.field-row {
+  display: flex;
+  gap: 8px;
+}
+.field-row .field {
+  flex: 1;
+}
+.artist-field-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+.artist-field-row .field {
+  flex: 1;
+}
+.artist-field-row .control-button {
+  height: 31px;
+  flex: none;
+  padding-inline: 8px;
+  font-size: var(--text-control);
+}
+/* The song's name and color are two facts about the same song. The name gets
+   the row; the color only needs one input-sized swatch beside it. */
+.song-field-row {
+  display: flex;
+  gap: 8px;
+}
+.song-field-row > .field:first-child {
+  flex: 1;
+}
+.song-color-field {
+  width: 31px;
+  flex: none;
+}
+.song-color-field .color-select {
+  width: 31px;
+  height: 31px;
+}
+/* "mixed" is a statement about the selection, not a value — it must not read
+   as text sitting in the field waiting to be written. */
+.field input::placeholder {
+  color: var(--caption);
+  font-style: italic;
+}
+
+/* --- roles -------------------------------------------------------- */
+
+.role-select-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.role-select-row > select,
+.role-select-control {
+  flex: 1;
+  min-width: 0;
+}
+.role-select-row select {
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+}
+.role-select-control {
+  position: relative;
+}
+.role-select-control .color-dot {
+  position: absolute;
+  z-index: 1;
+  left: 9px;
+  top: 11px;
+  pointer-events: none;
+}
+.role-select-control select {
+  padding-left: 25px;
+}
+.role-select-row .manage-roles {
+  flex: none;
+  padding: 5px 8px;
+  font-size: var(--text-control);
+}
+
+/* The native select keeps role assignment to one compact control and commits
+   as soon as its one value changes. */
+.role-select-row select:focus {
+  outline: none;
+  border-color: var(--focus);
+}
+.role-select-row select:disabled {
+  opacity: 0.4;
+}

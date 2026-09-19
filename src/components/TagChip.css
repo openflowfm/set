@@ -1,0 +1,26 @@
+/* Song tags are catalog metadata rather than structural roles, so every view
+   uses the same inverted treatment: transparent fill, colored outline and
+   matching text. Contexts only provide `--tag-chip-color` and layout. */
+.tag-chip {
+  display: inline-block;
+  flex: none;
+  max-width: 74px;
+  padding: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--tag-chip-color, var(--caption));
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 12px;
+  letter-spacing: var(--track-slight);
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.tag-chip.clash {
+  color: var(--amber);
+}

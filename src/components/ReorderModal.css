@@ -1,0 +1,117 @@
+.order-row {
+  cursor: grab;
+}
+.order-row:hover {
+  background: var(--sel);
+}
+.order-row.dragging {
+  opacity: 0.4;
+}
+/* The drop line is an inset shadow rather than a border, for the reason the
+   grid's is: a border changes the row's height, so every row below it would
+   shift each time the pointer crossed a boundary. */
+.order-row.drop-above {
+  box-shadow: var(--edge-top) var(--amber);
+}
+.order-row.drop-below {
+  box-shadow: var(--edge-bottom) var(--amber);
+}
+.order-row .grip {
+  color: var(--caption);
+  flex: none;
+}
+.order-row .pos {
+  color: var(--caption);
+  width: 24px;
+  text-align: right;
+  flex: none;
+}
+.order-row .x {
+  padding: 1px 6px;
+  font-size: var(--text-body);
+  border-color: transparent;
+  color: var(--caption);
+}
+.order-row .x:hover:not(:disabled) {
+  color: var(--fg);
+}
+
+/* A hierarchy is a sequence, not a bag of toggles: each row only breaks ties
+   left by the row above it. The repeated label makes that relationship legible
+   without nesting controls into an increasingly narrow staircase. */
+.sort-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+}
+.sort-heading,
+.sort-level {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sort-heading .lbl {
+  margin: 0;
+}
+.sort-heading .hint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sort-builder .add-sort,
+.sort-builder .sort-icon {
+  flex: none;
+  padding: 2px 7px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+}
+.sort-level {
+  padding-left: 8px;
+}
+.sort-level + .sort-level {
+  border-top: 1px solid var(--bd2);
+  padding-top: 5px;
+}
+.sort-depth {
+  width: 50px;
+  flex: none;
+  color: var(--caption);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  text-align: right;
+  text-transform: uppercase;
+}
+.sort-level select {
+  height: 24px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+}
+.sort-level select:first-of-type {
+  width: 112px;
+}
+.sort-level select:nth-of-type(2) {
+  width: 128px;
+}
+.sort-builder .sort-icon.remove {
+  color: var(--caption);
+}
+
+/* Something the write will do that nobody asked it to — a reprise gathered
+   into one run — or the fact that it can't be taken back. Marked rather than
+   shouted: it isn't an error, it's the part that has to have been read. */
+.warn {
+  font-size: var(--text-control);
+  line-height: 1.5;
+  color: var(--ui);
+  border-left: 2px solid var(--amber);
+  padding-left: 8px;
+}

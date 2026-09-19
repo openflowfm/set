@@ -1,0 +1,100 @@
+/* Sits in the stats strip, so it takes that row's baseline rather than
+   centring itself against a taller box. */
+.keyhint {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  color: var(--caption);
+}
+.keyhint b {
+  color: var(--detail);
+  font-weight: var(--weight-normal);
+}
+.stats-log-toggle {
+  width: 18px;
+  height: 16px;
+  align-self: center;
+  flex: none;
+  border-color: transparent;
+  color: var(--caption);
+}
+.stats-log-toggle svg {
+  width: 12px;
+  height: 12px;
+}
+.repository-link {
+  display: inline-flex;
+  align-self: center;
+  flex: none;
+  color: var(--caption);
+}
+.repository-link:hover {
+  color: var(--fg);
+}
+
+.connection-status {
+  align-self: center;
+  flex: none;
+  padding: 1px 5px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-sm);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 1;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.connection-status.ready {
+  color: var(--green);
+  border-color: rgba(95, 191, 168, 0.4);
+}
+.connection-status.waiting {
+  color: var(--red);
+  border-color: rgba(212, 84, 79, 0.4);
+}
+
+/* --- stats -------------------------------------------------------- */
+
+/* A status strip along the bottom, not a band across the top. Every pixel it
+   doesn't use is a scene row, so readiness and each tile stay on one line — a
+   checked state or number can be small. */
+.stats {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 3px 16px;
+  border-top: 1px solid var(--bd);
+  background: var(--surface-stats);
+  flex: none;
+  line-height: 1.4;
+}
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.stat .k {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-caps);
+  color: var(--caption);
+  text-transform: uppercase;
+}
+.stat .v {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  color: var(--detail);
+}
+.stat .v.warn {
+  color: var(--amber-muted);
+}
+.stat.clickable {
+  cursor: pointer;
+}
+.stat.clickable:hover .k {
+  color: var(--detail);
+}
+.stat.clickable:hover .v {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

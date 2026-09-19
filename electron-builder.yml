@@ -1,0 +1,19 @@
+# set[flow], packaged. `npm run pack`.
+#
+# The shape is `@openflow/desktop/electron-builder.base.yml`; this is what is only true of
+# this app.
+extends: node_modules/@openflow/desktop/electron-builder.base.yml
+
+appId: com.openflow.set
+productName: set[flow]
+
+# The download name, which is not the app name. `productName` above is what the
+# Dock, the menu bar and ⌘-Tab read, and the brackets are the whole point of it.
+# They are ruinous in a filename: `gh release create` glob-expands every asset
+# path it is given, reads `[flow]` as a character class, matches nothing, and
+# fails with "no matches found" before it has spoken to GitHub at all. A URL
+# would escape them too.
+artifactName: set-flow-${version}-${arch}.${ext}
+
+directories:
+  output: release

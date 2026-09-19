@@ -1,0 +1,78 @@
+@import '@openflow/widgets/type.css';
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg, #0a0a0b);
+  color: var(--fg, #ececed);
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 20px 24px 14px;
+  border-bottom: 1px solid var(--bd, #262629);
+  background: var(--panel, #0e0e10);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--text-heading);
+  letter-spacing: var(--track-slight);
+}
+
+header p {
+  max-width: 76ch;
+  margin: 6px 0 0;
+  color: var(--detail, #8b8b93);
+  font-size: var(--text-lead);
+  line-height: 1.55;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 24px;
+}
+
+h2 {
+  margin: 0 0 10px;
+  color: var(--ui, #b7b7be);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.stage {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--bd, #262629);
+  border-radius: var(--radius-lg);
+  background: var(--surface-cell, #131315);
+  overflow-x: auto;
+}
+
+.note {
+  max-width: 88ch;
+  margin: 8px 0 0;
+  color: var(--caption, #8b8b93);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+code {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  color: var(--ui, #b7b7be);
+}

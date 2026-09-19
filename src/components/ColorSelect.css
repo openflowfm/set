@@ -1,0 +1,62 @@
+/* --- compact color picker ---------------------------------------- */
+
+.color-select-row {
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.color-select-row .lbl {
+  margin-top: 0;
+}
+.color-select {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+}
+.color-select[aria-expanded='true'] {
+  border-color: var(--focus);
+  color: var(--fg);
+}
+.color-select.empty {
+  background: transparent;
+  border: 1px dashed var(--caption);
+}
+/* Wider than the rail on purpose: fourteen swatches keep Live's row-major hue
+   progression intact without making the individual colors harder to hit. */
+.color-select-popover {
+  width: 320px;
+  max-width: calc(100vw - 16px);
+  padding: 8px;
+  background: var(--panel);
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-menu);
+  color: var(--fg);
+}
+.color-select-heading {
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--caption);
+  padding: 0 0 6px;
+}
+.color-select-none {
+  width: 100%;
+  margin-top: 6px;
+  padding: 4px 6px;
+  border-color: transparent;
+  color: var(--caption);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  text-align: left;
+}
+.color-select-none:hover:not(:disabled) {
+  background: var(--sel);
+}

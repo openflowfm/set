@@ -1,0 +1,305 @@
+/* --- the metadata column ------------------------------------------ */
+
+td.scene-meta {
+  position: sticky;
+  left: var(--gutter);
+  z-index: var(--layer-pinned);
+  --scene-gutter-plug: calc(-1 * var(--gutter)) 0 0 var(--bg);
+  background: var(--bg);
+  box-shadow: var(--scene-gutter-plug);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  color: var(--detail);
+  white-space: nowrap;
+  padding-left: 10px;
+  padding-right: 8px;
+  width: var(--meta-col-w);
+  max-width: var(--meta-col-w);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+td.scene-meta .scene-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+td.scene-meta .scene-n {
+  color: var(--caption);
+  flex: 0 0 26px;
+  cursor: grab;
+}
+td.scene-meta .scene-n:active {
+  cursor: grabbing;
+}
+td.scene-meta .scene-bpm,
+td.scene-meta .scene-key {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: 1px;
+}
+td.scene-meta .scene-bpm {
+  flex: 0 0 26px;
+  color: var(--detail);
+}
+td.scene-meta .scene-key {
+  flex: 0 0 28px;
+  color: var(--caption);
+}
+td.scene-meta .scene-bpm.none,
+td.scene-meta .scene-key.none {
+  color: var(--caption);
+}
+td.scene-meta.picked {
+  --scene-gutter-plug: calc(-1 * var(--gutter)) 0 0 var(--sel);
+  background: var(--sel);
+  box-shadow: var(--edge-left) var(--amber), var(--scene-gutter-plug);
+}
+
+/* --- the Master column's scene cell -------------------------------- */
+
+td.scene-role {
+  --launcher-size: 14px;
+  --launcher-inset: 2px;
+  --launcher-gap: 4px;
+  --launcher-lane: calc(var(--launcher-inset) + var(--launcher-size) + var(--launcher-gap));
+  position: sticky;
+  left: var(--role-col-left);
+  z-index: var(--layer-pinned);
+  --scene-gutter-plug: calc(-1 * var(--gutter)) 0 0 var(--bg);
+  box-shadow: var(--scene-gutter-plug);
+  height: 20px;
+  padding: 0 5px 0 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background: var(--surface-cell);
+  overflow: hidden;
+  cursor: pointer;
+}
+td.scene-role.uncolored {
+  border-color: var(--bd3);
+  border-style: dashed;
+}
+td.scene-role:is(.none, .uncolored) .role-chip {
+  color: var(--caption);
+}
+td.scene-role.picked {
+  --scene-gutter-plug: calc(-1 * var(--gutter)) 0 0 var(--sel);
+  background: var(--sel);
+}
+
+td.scene-role > .fire {
+  float: left;
+  width: var(--launcher-size);
+  height: var(--launcher-size);
+  margin: var(--launcher-inset) var(--launcher-gap) var(--launcher-inset) var(--launcher-inset);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: var(--text-annot);
+  line-height: var(--launcher-size);
+}
+td.scene-role > .fire:hover {
+  background: rgba(0, 0, 0, 0.45);
+  color: inherit;
+}
+td.scene-role:is(.none, .uncolored) > .fire {
+  background: none;
+  color: var(--idle);
+}
+td.scene-role:is(.none, .uncolored) > .fire:hover {
+  background: none;
+  color: var(--fg);
+}
+td.scene-role > .fire.live {
+  background: var(--green);
+  color: var(--bg);
+}
+td.scene-role > .fire.fired {
+  background: var(--amber);
+  color: var(--bg);
+  animation: openflow-blink 0.5s infinite;
+}
+
+td.scene-role .role-chip {
+  display: block;
+  width: calc(100% - var(--launcher-lane));
+  overflow: hidden;
+  height: var(--launcher-size);
+  margin: var(--launcher-inset) 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: var(--launcher-size);
+  letter-spacing: var(--track-slight);
+  text-align: left;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+td.scene-role .role-chip:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- moving scenes ------------------------------------------------- */
+
+tr.scene-row.dragging td {
+  opacity: 0.4;
+}
+
+tr.scene-row.drop-above td {
+  box-shadow: var(--edge-top) var(--amber);
+}
+tr.scene-row.drop-below td {
+  box-shadow: var(--edge-bottom) var(--amber);
+}
+tr.scene-row.drop-above :is(td.scene-meta, td.scene-role) {
+  box-shadow: var(--edge-top) var(--amber), var(--scene-gutter-plug);
+}
+tr.scene-row.drop-below :is(td.scene-meta, td.scene-role) {
+  box-shadow: var(--edge-bottom) var(--amber), var(--scene-gutter-plug);
+}
+
+/* --- play state --------------------------------------------------- */
+
+td.cell.playing {
+  background-image: linear-gradient(90deg, var(--green) 0 3px, transparent 3px);
+}
+td.cell.fired {
+  background-image: linear-gradient(90deg, var(--amber) 0 3px, transparent 3px);
+  animation: openflow-blink 0.5s infinite;
+}
+
+td.cell.has.playing,
+td.cell.has.fired,
+td.cell.empty.playing,
+td.cell.empty.fired {
+  background-image: none;
+}
+
+td.cell,
+td.scene-meta,
+td.scene-role {
+  scroll-margin-top: calc(var(--header-h) + var(--gutter));
+}
+
+td.cell {
+  scroll-margin-left: calc(var(--meta-col-w) + var(--col-w) + 3 * var(--gutter));
+  width: var(--col-w);
+  max-width: var(--col-w);
+  height: 20px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-cell);
+  cursor: pointer;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 18px;
+  padding: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: transparent;
+  border: 1px solid transparent;
+}
+td.cell.sel {
+  border-color: var(--amber);
+  box-shadow: var(--ring-out) rgba(240, 178, 60, 0.5);
+}
+
+td.cell.has {
+  padding-left: 0;
+}
+td.cell.has > .fire {
+  float: left;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  margin: 2px 4px 2px 2px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: var(--text-label);
+}
+td.cell.has > .fire:hover {
+  background: rgba(0, 0, 0, 0.45);
+  color: inherit;
+}
+
+td.cell.has.playing > .fire {
+  background: var(--green);
+  color: var(--bg);
+}
+td.cell.has.fired > .fire {
+  background: var(--amber);
+  color: var(--bg);
+}
+
+/* --- empty slots -------------------------------------------------- */
+
+td.cell.empty {
+  padding-left: 0;
+}
+td.cell.empty > .slot-btn {
+  float: left;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  margin: 2px 4px 2px 2px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: none;
+  color: var(--idle);
+  font-size: var(--text-label);
+}
+td.cell.empty > .slot-btn:hover {
+  color: var(--fg);
+}
+
+td.cell.empty > .slot-btn.rec {
+  color: var(--red);
+}
+td.cell.empty > .slot-btn.rec:hover {
+  filter: brightness(1.25);
+}
+
+td.cell.empty.fired > .slot-btn {
+  background: var(--amber);
+  color: var(--bg);
+}
+td.cell.empty.playing > .slot-btn.rec,
+td.cell.empty.playing > .slot-btn.rec:hover {
+  background: var(--red);
+  color: var(--bg);
+  filter: none;
+}
+
+/* --- dragging clips ----------------------------------------------- */
+
+td.cell.lifting {
+  opacity: 0.35;
+}
+
+td.cell.landing {
+  outline: 1px dashed var(--amber);
+  outline-offset: -1px;
+}
+
+td.cell.active,
+td.scene-role.active {
+  outline: 1px solid var(--fg);
+  outline-offset: -3px;
+}

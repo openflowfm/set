@@ -1,0 +1,27 @@
+.device-plate {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  align-items: start;
+  gap: 6px 8px;
+  padding: 5px 6px;
+  overflow-x: auto;
+}
+
+.device-plate-waiting {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--wdg-caption);
+  font-family: var(--wdg-sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-control);
+}
+
+.device-param-missing {
+  opacity: 0.45;
+}
+
+.device-param-missing .wdg-body {
+  border-style: dashed;
+}

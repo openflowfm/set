@@ -1,0 +1,31 @@
+.device-chain {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--bd);
+  background: var(--rail);
+}
+
+.device-chain-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 12px;
+}
+
+.device-chain-track {
+  font-size: var(--text-body);
+  color: var(--fg);
+}
+
+.device-chain-count {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  color: var(--detail);
+}
+
+.device-chain-run {
+  max-height: 46vh;
+  padding: 0 8px 8px;
+  overflow: auto;
+}

@@ -1,0 +1,107 @@
+.track-view-controls {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gutter);
+  width: 100%;
+  height: var(--stop-row-h);
+  background: var(--grid-rule);
+}
+
+.tvc-width,
+.tvc-toggle {
+  height: 100%;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: var(--rail);
+  color: var(--caption);
+  font-variation-settings: var(--mono-axes);
+  cursor: pointer;
+}
+.tvc-width:hover,
+.tvc-toggle:hover:not(:disabled) {
+  color: var(--fg);
+}
+.tvc-width:focus-visible,
+.tvc-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--ring) var(--amber-muted);
+}
+
+.tvc-width {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 5px;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-slight);
+  text-align: left;
+}
+.tvc-width-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tvc-caret {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.tvc-toggle {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--stop-row-h);
+  padding: 0;
+}
+.tvc-toggle[aria-pressed='true'] {
+  background: var(--sel);
+  color: var(--amber);
+}
+.tvc-toggle:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tvc-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 96px;
+  padding: 4px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-menu);
+}
+.tvc-option {
+  margin: 0;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ui);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-slight);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tvc-option.cursor {
+  background: var(--sel);
+  color: var(--fg);
+}
+.tvc-option.on {
+  color: var(--amber);
+}

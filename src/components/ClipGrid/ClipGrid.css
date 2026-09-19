@@ -1,0 +1,781 @@
+/* --- grid --------------------------------------------------------- */
+
+table.grid {
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  table-layout: fixed;
+
+  background: linear-gradient(var(--grid-rule), var(--grid-rule)) right top /
+    var(--gutter) 100% no-repeat;
+
+  --gutter: 2px;
+  /* Where the second pinned column starts. Declared here because it is written
+     against --gutter, which is. */
+  --role-col-left: calc(var(--meta-col-w) + 2 * var(--gutter));
+  --grid-rule: var(--bd2);
+  --meter-panel-h: 220px;
+  --stop-row-h: 20px;
+  --track-pad-x: 5px;
+
+  --band-w: 5px;
+  --header-pad-y: calc(var(--band-w) + var(--gutter));
+  --label-h: var(--ctl-h);
+  --header-h: calc(var(--header-pad-y) + var(--label-h) + var(--header-pad-y));
+}
+table.grid col {
+  width: var(--col-w);
+}
+table.grid col.meta-col {
+  width: var(--meta-col-w);
+}
+table.grid th {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: var(--label-h);
+  letter-spacing: var(--track-label);
+  color: var(--caption);
+  text-transform: uppercase;
+  font-weight: var(--weight-normal);
+  text-align: center;
+  padding: var(--header-pad-y) var(--gutter);
+  position: sticky;
+  top: var(--gutter);
+  background: var(--bg);
+  z-index: var(--layer-grid-header);
+  --header-plug-right: var(--bg);
+  --header-plugs:
+    calc(-1 * var(--gutter)) 0 0 var(--bg),
+    var(--gutter) 0 0 var(--header-plug-right),
+    0 calc(-1 * var(--gutter)) 0 var(--bg),
+    0 8px 14px -4px var(--shadow-edge);
+  box-shadow: var(--header-plugs);
+  white-space: nowrap;
+}
+table.grid th:last-child {
+  --header-plug-right: var(--grid-rule);
+}
+table.grid th .th-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+table.grid th .th-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--weight-strong);
+}
+table.grid th.meta-h {
+  left: var(--gutter);
+  z-index: var(--layer-pinned-corner);
+  text-align: left;
+  padding-inline: 8px;
+}
+table.grid th.meta-h .meta-h-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+/* The title gives way first. The 8 and 16 modes have no width floor, so this
+   header can be narrower than its contents; the buttons are the half you can
+   press, so they keep their size and the label ellipses. */
+table.grid th.meta-h .meta-h-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--text-heading);
+}
+table.grid th.meta-h .song-action-groups {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+table.grid th.meta-h .song-action-group {
+  height: var(--ctl-h);
+  display: flex;
+  background: transparent;
+}
+.control-button.song-action {
+  width: 26px;
+  height: var(--ctl-h);
+  flex: none;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--song-action-ink, var(--detail));
+}
+.control-button.song-action svg {
+  width: 14px;
+  height: 14px;
+}
+.control-button.song-action:hover:not(:disabled) {
+  background: transparent;
+  color: inherit;
+}
+
+/* --- groups ---------------------------------------------------------- */
+
+table.grid th.banded {
+  box-shadow: inset 0 var(--band-w) 0 var(--band),
+    var(--header-plugs);
+}
+table.grid th.banded:not(.group-h) {
+  box-shadow: inset 0 var(--band-w) 0 var(--band),
+    inset 0 calc(var(--band-w) + var(--gutter)) 0 var(--bg),
+    var(--header-plugs);
+}
+table.grid th.banded:not(.band-start)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--gutter));
+  width: var(--gutter);
+  height: var(--band-w);
+  background: var(--band);
+}
+
+table.grid th.group-h {
+  letter-spacing: var(--track-label);
+}
+table.grid th.group-h .th-label {
+  flex: 1;
+  text-align: left;
+}
+table.grid th.group-h:hover {
+  filter: brightness(1.15);
+}
+/* Its own button since the header stopped being one big fold target: the group
+   now opens its devices like any other track, and this is the only thing that
+   folds it. Padded wider than the glyph so it stays hittable at every column
+   width, and transparent so it keeps riding the group's own color. */
+table.grid th.group-h .fold {
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: var(--label-h);
+  margin-left: 3px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+table.grid th.group-h .fold:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: -1px;
+}
+
+td.cell.group {
+  background: var(--surface-cell-muted);
+  color: var(--caption);
+  cursor: default;
+  text-align: center;
+  padding: 0 2px;
+}
+td.cell.group > .fire {
+  float: left;
+  padding: 0;
+  width: 12px;
+  border: none;
+  background: none;
+  color: var(--idle);
+  font-size: var(--text-annot);
+  line-height: 18px;
+  vertical-align: middle;
+}
+td.cell.group > .fire:hover {
+  color: var(--amber);
+}
+td.cell.group.playing > .fire {
+  color: var(--green);
+}
+td.cell.group.fired > .fire {
+  color: var(--amber);
+}
+td.cell.group > .group-n {
+  float: right;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 18px;
+  color: var(--caption);
+}
+td.cell.group.playing > .group-n {
+  color: var(--green);
+}
+
+table.grid th.track-h {
+  cursor: pointer;
+  padding-right: var(--track-pad-x);
+  padding-left: var(--track-pad-x);
+  /* Held on every header, coloured on the selected one, so selecting changes a
+     colour rather than the layout — a border only on the marked header would
+     grow the whole row by 2px the moment you clicked. Transparent shows the
+     track's own fill through it, since the background paints under the border. */
+  border-bottom: 2px solid transparent;
+}
+
+/* The track whose devices are in the footer. A border rather than another
+   `box-shadow`: the band, the gutter that holds a member off it, and the plugs
+   are all shadow layers on this same element, and `box-shadow` doesn't compose
+   across rules — a second declaration replaces the lot, which took the band with
+   it and dropped the marked track out of its group.
+   `currentColor` because `inkOn` has already picked the one ink that reads
+   against this track's own Live color, whatever Live made it. */
+table.grid th.track-h.devices-shown {
+  border-bottom-color: currentColor;
+}
+
+table.grid th.track-h.live {
+  background-image: linear-gradient(90deg, var(--green) 0 3px, transparent 3px);
+}
+table.grid th.track-h.stopping {
+  background-image: linear-gradient(90deg, var(--amber) 0 3px, transparent 3px);
+  animation: openflow-blink 0.5s infinite;
+}
+
+@keyframes openflow-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* --- mixer --------------------------------------------------------- */
+
+table.grid tfoot {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--layer-mixer);
+  background: var(--grid-rule);
+}
+
+table.grid
+  tfoot
+  tr:is(.stop-row, .sends-row, .meter-row)
+  td {
+  --footer-gutter-fill: 0 0 0 var(--gutter) var(--grid-rule);
+  box-shadow: var(--footer-gutter-fill);
+}
+
+table.grid tfoot tr.stop-row td {
+  position: relative;
+  padding: 0;
+  background: var(--rail);
+  box-shadow: var(--footer-gutter-fill), var(--shadow-lift);
+  vertical-align: middle;
+}
+
+/* Both pinned columns, in all three footer rows. `:is()` carries a class's
+   specificity, which is what these need to beat the `position: relative` the
+   rows set on every cell. */
+table.grid tfoot tr:is(.stop-row, .sends-row, .meter-row) td.meta-cell {
+  position: sticky;
+  left: var(--gutter);
+  z-index: var(--layer-mixer-corner);
+}
+table.grid tfoot tr:is(.stop-row, .sends-row, .meter-row) td.master-cell {
+  position: sticky;
+  left: var(--role-col-left);
+  z-index: var(--layer-mixer-corner);
+}
+
+button.stop-clips-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: var(--stop-row-h);
+  padding: 0 0 0 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--caption);
+}
+
+button.stop-clips-button:hover:not(:disabled),
+button.stop-clips-button:focus-visible {
+  border-color: var(--focus);
+  color: var(--fg);
+  outline: none;
+}
+
+button.stop-clips-button.control-button-on {
+  border-color: var(--amber-muted);
+  background: var(--sel);
+  color: var(--amber);
+}
+
+.track-status {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--stop-row-h);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.track-status-pie {
+  flex: none;
+  display: block;
+}
+
+.track-status-pie-ring {
+  fill: none;
+  stroke: var(--idle);
+  stroke-width: 1;
+}
+
+.track-status-pie-fill {
+  fill: var(--green);
+}
+
+.track-status-time {
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 1;
+  letter-spacing: var(--track-slight);
+  color: var(--green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-status-time.recording {
+  color: var(--red);
+}
+
+table.grid tfoot tr.meter-row td {
+  position: relative;
+  height: var(--meter-panel-h);
+  padding: 8px 2px;
+  background: var(--rail);
+  vertical-align: middle;
+}
+
+table.grid tfoot tr.meter-row td::before {
+  content: '';
+  position: absolute;
+  z-index: 10;
+  top: -2px;
+  right: 0;
+  left: 0;
+  height: 6px;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+table.grid tfoot tr.meter-row {
+  outline: none;
+}
+
+table.grid tfoot tr.sends-row td {
+  position: relative;
+  padding: 7px 2px;
+  background: var(--rail);
+  vertical-align: top;
+}
+
+.mixer-strip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 56px;
+  max-width: 100%;
+  height: calc(var(--meter-panel-h) - 16px);
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.mixer-fader {
+  --mixer-meter-w: clamp(8px, calc(100% - 40px), 16px);
+
+  position: relative;
+  display: flex;
+  flex: 1 0 146px;
+  width: 56px;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.mixer-meter-control {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.mixer-sends {
+  display: grid;
+  gap: 3px;
+  width: min(56px, 100%);
+  margin: 0 auto;
+}
+
+.mixer-send {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr);
+  gap: 3px;
+  width: 100%;
+  height: 17px;
+  min-height: 17px;
+}
+
+.mixer-send {
+  align-items: center;
+  color: var(--ui);
+}
+
+.mixer-send.disabled {
+  opacity: 0.4;
+}
+
+.mixer-send-label {
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-control);
+  line-height: 1;
+  text-align: center;
+}
+
+.mixer-send-value {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 17px;
+  overflow: hidden;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-xs);
+  background: var(--surface-control);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  line-height: 1;
+  letter-spacing: var(--track-tight);
+  cursor: ew-resize;
+}
+
+.mixer-send-value::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--send-position);
+  background: var(--blue);
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.mixer-send-value .send-fader {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  cursor: ew-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.mixer-send-value .send-fader[aria-disabled='true'] {
+  cursor: default;
+}
+
+.mixer-send-value output {
+  position: relative;
+  z-index: 1;
+  color: var(--ui);
+  pointer-events: none;
+}
+
+.mixer-send-value:focus-within {
+  border-color: var(--focus);
+  outline: none;
+}
+
+.vertical-meter {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: var(--mixer-meter-w);
+}
+
+.meter-well {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  flex: none;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-xs);
+  background-color: #000;
+}
+
+.meter-rules {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.meter-rule {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.meter-rule.zero {
+  z-index: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.32);
+}
+
+.meter-level {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  border-radius: 0 0 var(--radius-xs) var(--radius-xs);
+  background: linear-gradient(
+    to top,
+    var(--green) 0 var(--meter-unity),
+    var(--amber) var(--meter-unity) var(--meter-hot),
+    var(--red) var(--meter-hot) 100%
+  );
+  transition: transform 24ms linear;
+}
+
+.meter-peak {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--fg);
+  box-shadow: 0 0 1px #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meter-peak.visible {
+  opacity: 1;
+}
+
+.volume-fader {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  cursor: ns-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.volume-fader[aria-disabled='true'] {
+  cursor: default;
+}
+
+.volume-indicator {
+  position: absolute;
+  z-index: 2;
+  right: var(--mixer-meter-w);
+  width: 0;
+  height: 0;
+  transform: translateY(50%);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--ui);
+  filter: drop-shadow(0 0 1px #000);
+  pointer-events: none;
+}
+
+.volume-indicator.disabled {
+  opacity: 0.35;
+}
+
+.mixer-readouts {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 26px;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.meter-peak-readout,
+.mixer-volume-readout,
+.mixer-pan {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 19px;
+  padding: 0;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-xs);
+  background: var(--surface-control);
+  color: var(--ui);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-annot);
+  line-height: 1;
+  letter-spacing: var(--track-tight);
+  white-space: nowrap;
+}
+
+.meter-peak-readout {
+  color: var(--detail);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.meter-peak-readout:hover,
+.meter-peak-readout:focus-visible {
+  border-color: var(--focus);
+  color: var(--fg);
+  outline: none;
+}
+
+.volume-fader:hover ~ .volume-indicator,
+.volume-fader:focus-visible ~ .volume-indicator {
+  border-left-color: var(--fg);
+}
+
+.volume-fader:focus-visible ~ .vertical-meter .meter-well {
+  outline: 1px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.mixer-pan {
+  position: absolute;
+  z-index: 5;
+  bottom: 78px;
+  left: 0;
+  cursor: ew-resize;
+  overflow: hidden;
+}
+
+.mixer-pan.disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pan-fader {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  cursor: ew-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.pan-fader[aria-disabled='true'] {
+  cursor: default;
+}
+
+.mixer-pan > span {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.mixer-pan > span::after {
+  content: '';
+  position: absolute;
+  left: var(--pan-position);
+  bottom: -5px;
+  width: 2px;
+  height: 1px;
+  background: var(--caption);
+  transform: translateX(-50%);
+}
+
+.mixer-pan:focus-within {
+  border-color: var(--focus);
+  color: var(--fg);
+}
+
+.control-group.mixer-controls {
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  align-items: normal;
+  gap: 6px;
+}
+
+.control-group.mixer-controls-hidden {
+  visibility: hidden;
+}
+
+button.mixer-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 13px;
+  padding: 0;
+  border-color: var(--bd3);
+  border-radius: var(--radius-xs);
+  background: var(--surface-control);
+  color: var(--detail);
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-control);
+  line-height: 1;
+  font-weight: var(--weight-strong);
+}
+
+button.mixer-activator {
+  height: 26px;
+  font-size: var(--text-lead);
+}
+
+button.mixer-button:hover:not(:disabled) {
+  color: var(--fg);
+  border-color: var(--focus);
+}
+
+button.mixer-activator.control-button-on {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: var(--bg);
+}
+
+button.mixer-button.mixer-solo.control-button-on {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: var(--bg);
+}
+
+button.mixer-arm span {
+  width: 7px;
+  height: 7px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
+button.mixer-arm.control-button-on {
+  border-color: rgba(212, 84, 79, 0.65);
+  background: var(--sel);
+  color: var(--red);
+}
+
+button.mixer-arm.group-hidden {
+  visibility: hidden;
+}

@@ -1,0 +1,46 @@
+/* Snapshotting replaces the meaning of everything underneath, so this modal
+   cannot be dismissed early. The blur makes that stale content visibly
+   unavailable while retaining enough shape to keep the transition grounded. */
+.sync-back {
+  background: rgba(0, 0, 0, 0.48);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.sync-modal {
+  width: 360px;
+  overflow: hidden;
+  box-shadow: var(--shadow-modal);
+}
+.sync-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ui);
+  font-size: var(--text-lead);
+}
+.sync-percent {
+  flex: none;
+  color: var(--amber);
+  font-variation-settings: var(--mono-axes);
+  font-variant-numeric: tabular-nums;
+}
+.sync-progress {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 8px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  color: var(--amber);
+  background: var(--bd);
+}
+.sync-progress::-webkit-progress-bar {
+  background: var(--bd);
+}
+.sync-progress::-webkit-progress-value,
+.sync-progress::-moz-progress-bar {
+  background: var(--amber);
+}

@@ -1,0 +1,233 @@
+/* --- song index --------------------------------------------------- */
+
+/* A navigation pane rather than an editing rail: it owns the left edge and
+   gives every pixel back to the grid when closed. The list scrolls on its own
+   so jumping around never changes which songs remain reachable. */
+.song-index {
+  /* Set inline from the visible columns — see lib/songIndexColumns.ts. The
+     fallback is the all-columns width, so the pane is never unstyled-wide if
+     the property is missing. */
+  width: var(--song-index-w, 384px);
+  flex: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--bd);
+  background: var(--rail);
+}
+
+.song-index-head {
+  height: 39px;
+  padding: 0 10px 0 12px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--bd);
+}
+.song-index-head .lbl {
+  margin: 0;
+}
+/* Adjacency groups them without a border, the way the Songs header does it. */
+.song-index-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.song-index-cols-btn {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: none;
+  color: var(--caption);
+}
+.song-index-cols-btn:hover:not(:disabled) {
+  color: var(--fg);
+  background: var(--sel);
+}
+.song-index-close {
+  padding: 0 4px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--caption);
+  font-size: var(--text-heading);
+  line-height: 16px;
+}
+.song-index-close:hover:not(:disabled) {
+  color: var(--fg);
+  background: var(--sel);
+}
+
+/* The column switches, disclosed by the head's columns button. Above the
+   search rather than below it so the list never moves down the pane while
+   you're reading it — this row opens between two things that are already
+   chrome. Wrapping, because the pane can be narrow once columns come off. */
+.song-index-fields {
+  padding: 7px 10px 7px 12px;
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--bd2);
+}
+.song-index-fields .control-button {
+  padding: 2px 7px;
+  font-family: var(--mono);
+font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-slight);
+  text-transform: uppercase;
+}
+
+.song-index-search {
+  padding: 7px 10px 7px 12px;
+  flex: none;
+  border-bottom: 1px solid var(--bd2);
+}
+.song-index-search input {
+  width: 100%;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--bd3);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+  color: var(--ui);
+  font-family: var(--sans);
+  font-variation-settings: var(--sans-axes);
+  font-size: var(--text-control);
+  outline: none;
+}
+.song-index-search input::placeholder {
+  color: var(--caption);
+}
+.song-index-search input:focus-visible {
+  border-color: var(--amber-muted);
+  box-shadow: var(--ring-out) var(--amber-muted);
+}
+
+/* Real columns, like Live's content lists. The fixed facts keep their narrow
+   slots; name and artist are both free text and share the rest in proportion.
+
+   The track list is set inline on the pane from whichever columns are on, so
+   the header row and every song row read one property and can't disagree about
+   how many columns there are. The fallback is all five. */
+.song-index-columns,
+.song-index-row {
+  display: grid;
+  grid-template-columns: var(
+    --song-index-cols,
+    minmax(0, 124fr) minmax(0, 92fr) 32px 34px 56px
+  );
+  gap: 6px;
+  align-items: center;
+}
+.song-index-columns {
+  padding: 6px 10px 5px 12px;
+  flex: none;
+  border-bottom: 1px solid var(--bd2);
+  color: var(--caption);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-annot);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+.song-index-columns button {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-transform: inherit;
+  white-space: nowrap;
+}
+.song-index-columns button:hover:not(:disabled) {
+  color: var(--ui);
+}
+.song-index-columns button.active {
+  color: var(--amber);
+}
+.song-index-columns .sort-direction {
+  font-size: var(--text-label);
+  line-height: 1;
+}
+
+.song-index-list {
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 0 10px;
+}
+.song-index-row {
+  min-height: 27px;
+  padding: 2px 10px 2px 12px;
+  color: var(--detail);
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+}
+.song-index-row:hover {
+  background: var(--surface-song-hover);
+}
+.song-index-row > span {
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-index-row > span.none {
+  color: var(--caption);
+}
+
+.song-index-name {
+  min-width: 0;
+  padding: 3px 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: 1.2;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-index-name:hover:not(:disabled),
+.song-index-name:focus-visible {
+  color: var(--amber);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+}
+.song-index-row.colored .song-index-name {
+  color: var(--index-song-rgb);
+}
+.song-index-row.colored .song-index-name:hover:not(:disabled),
+.song-index-row.colored .song-index-name:focus-visible {
+  color: var(--amber);
+}
+
+.song-index-empty {
+  padding: 18px 12px;
+  color: var(--caption);
+  font-size: var(--text-body);
+}
+
+@media (max-width: 760px) {
+  .song-index {
+    /* Never wider than its columns need, and never past what the grid can
+       spare. `max()` inside is the floor: 42vw on a phone-width window would
+       otherwise squeeze the pane to nothing. Written as min-of-max rather than
+       `clamp` because the preferred value is the *upper* bound here — a clamp
+       whose max falls below its min silently returns the min, which is how a
+       narrow one-column pane would come back wider than it asked for. */
+    width: min(var(--song-index-w, 384px), max(180px, 42vw));
+  }
+}

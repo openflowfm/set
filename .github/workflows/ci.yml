@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Electron ships a ~200 MB Chromium that no CI job here can run — the
+    # typecheck needs its type declarations and nothing else, and those come
+    # with the package rather than the binary.
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      # Coverage rather than a plain run: same tests, V8's own counters, and a
+      # table on the build page instead of a number that only ever existed in
+      # somebody's terminal.
+      - id: coverage
+        run: npm run test:coverage
+
+      # report/ is the vitest ui with the coverage report copied in under
+      # coverage/ — one directory that is both the artifact and the site.
+      - if: ${{ !cancelled() && steps.coverage.conclusion != 'skipped' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-${{ github.sha }}
+          path: report/
+          if-no-files-found: error
+          retention-days: 14
+
+      # The "must build from a clean tree" rule, enforced rather than
+      # remembered. A clean checkout is the only place it's honestly tested —
+      # a file that's untracked but imported passes locally and fails here.
+      - run: npm run build
+
+      # Compile the Electron bundle on Linux.
+      # notarising the macOS app stay in release.yml, on macOS.
+      - run: npm run electron

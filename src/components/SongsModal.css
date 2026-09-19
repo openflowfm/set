@@ -1,0 +1,57 @@
+/* --- songs -------------------------------------------------------- */
+
+/* The table scrolls inside the modal rather than pushing it off screen —
+   a 100-song set is a long list. */
+.songs-wrap {
+  overflow: auto;
+  max-height: 52vh;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+}
+table.songs {
+  width: 100%;
+  border-collapse: collapse;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+}
+table.songs th {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  border-bottom: 1px solid var(--bd);
+  color: var(--caption);
+  font-weight: var(--weight-normal);
+  text-align: left;
+  padding: 6px 10px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  font-size: var(--text-label);
+}
+table.songs td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--bd2);
+  color: var(--ui);
+  white-space: nowrap;
+}
+table.songs tbody tr {
+  cursor: pointer;
+}
+table.songs tbody tr:hover td {
+  background: var(--sel);
+  color: var(--fg);
+}
+table.songs .song-name {
+  color: var(--fg);
+  width: 100%; /* takes the slack, so the numeric columns stay tight */
+}
+table.songs .n {
+  text-align: right;
+}
+/* Scenes of one song that disagree about a fact. Not an error — the library
+   arbitrates — but it must not be shown as though one value were the answer. */
+.clash {
+  color: var(--amber);
+}
+.flags {
+  text-align: right;
+}
