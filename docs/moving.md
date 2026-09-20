@@ -60,7 +60,7 @@ addressable from both sides — a song ending at scene 5 and the next starting a
 set and the one gap `above` can't express.
 
 What it costs in Live, and the four passes it runs, is in
-[`bridge/README.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/README.md) under *Reordering scenes*. **It is unverified
+[`bridge/README.md`](https://github.com/openflowfm/bridge/blob/main/README.md) under *Reordering scenes*. **It is unverified
 against a real set.**
 
 ## Dragging clips

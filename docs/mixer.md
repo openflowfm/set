@@ -46,7 +46,7 @@ Frames arrive at 20 Hz and never enter React state, exactly like the meters — 
 
 The watch is held only while the stop row is on screen, since that is where it draws — its
 toggle *is* the subscription. See
-[`bridge/docs/message-protocol.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/docs/message-protocol.md) for what the
+[`bridge/docs/message-protocol.md`](https://github.com/openflowfm/bridge/blob/main/docs/message-protocol.md) for what the
 device does with it, and why that one is polled where everything else here is observed.
 
 The header's meter icon opens a column-aligned mixer below the grid. Every visible track

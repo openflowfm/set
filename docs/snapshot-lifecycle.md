@@ -49,7 +49,7 @@ rather than to N tabs reaching the same conclusion at the same moment. Everythin
 a write Live took only half of, a delta that didn't line up — asks without `fresh`, because
 in each of those the bridge either holds a set that is current or has already dropped its
 own and will walk on that very request. What the bridge does with the two cases is in
-[`bridge/docs/multiple-clients.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/docs/multiple-clients.md).
+[`bridge/docs/multiple-clients.md`](https://github.com/openflowfm/bridge/blob/main/docs/multiple-clients.md).
 
 The reply carries `cached`, which says which of the two happened.
 
@@ -91,7 +91,7 @@ Coming back to the window re-asks the bridge for the set, which is a message and
 rather than a walk.
 
 The middle one is the interesting one, and how it works is in
-[`bridge/README.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/README.md) under *Following Live*: the bridge watches
+[`bridge/README.md`](https://github.com/openflowfm/bridge/blob/main/README.md) under *Following Live*: the bridge watches
 Live's Session cursor — two observers, not one per slot — and re-reads the track the
 cursor moved to **and the one it left**, because you have to select a clip to drag it, so
 the position it left is where the clip came from.

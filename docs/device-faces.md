@@ -150,7 +150,7 @@ Two consequences worth knowing before adjusting anything:
   wants one, is a fifth and sixth control on that side.
 - **Band selection is not drawn**, and that one is only waiting. Live marks the band its
   display has focused, and `Eq8Device.View.selected_band` is settable *and* observable, so
-  it can be kept in step both ways — see [`bridge/LOM.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/LOM.md). Nothing on
+  it can be kept in step both ways — see [`bridge/LOM.md`](https://github.com/openflowfm/bridge/blob/main/LOM.md). Nothing on
   the wire carries it today, which is why the face has no notion of it.
 
 Colours come from the app through the token bridge: every `--wdg-*` token resolves to a
@@ -171,7 +171,7 @@ and the point of drawing them at all is that the gap stays visible.
 2. **Mode and Edit** — `Eq8Device.global_mode` and `edit_mode`, which are device
    *properties* rather than parameters and so will never appear in `ChainDevice.parameters`
    however well the name matching works. Both are `get, set, observe` — see
-   [`bridge/LOM.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/LOM.md) — so the gap is in what the wire carries. Closing
+   [`bridge/LOM.md`](https://github.com/openflowfm/bridge/blob/main/LOM.md) — so the gap is in what the wire carries. Closing
    it means a per-class properties tier alongside the parameter one: which properties a
    class publishes, read on open and observed like a value. `oversample` is the third of
    these and the face doesn't draw it at all.

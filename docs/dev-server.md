@@ -100,7 +100,7 @@ it is the one dev server that says nothing about whether the bridge is up.
 Several dev servers can share one device — they all proxy to the same bridge, and
 `bridgeUrl()` falls back to `location.host` when nothing has told it otherwise, so nothing
 needs telling which port it's on. That's the multi-client path, so see
-[`bridge/README.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/README.md) for what the bridge does and doesn't yet
+[`bridge/README.md`](https://github.com/openflowfm/bridge/blob/main/README.md) for what the bridge does and doesn't yet
 guarantee when more than one client is connected.
 
 **:17800 is not a URL any more.** The device serves no page — it answers a browser with one

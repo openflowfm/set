@@ -182,7 +182,7 @@ enum indexes by.
 
 `str_for_value(min + k)` per member has no such ambiguity. It costs n calls instead of one,
 once, when the device opens, and it is the same function every other readout in this
-project already trusts. See [`LOM.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/LOM.md) under `DeviceParameter`.
+project already trusts. See [`LOM.md`](https://github.com/openflowfm/bridge/blob/main/LOM.md) under `DeviceParameter`.
 
 ### Values land in a store, not in React state
 
@@ -275,7 +275,7 @@ float off the run it heads. A mark on one edge has no such relationship to break
 and ordinary headers need no case for either.
 
 The bridge observes `selected_track` for its own delta detection (see
-[`bridge/docs/following-live.md`](https://github.com/ryangavin/better-session-view/blob/main/bridge/docs/following-live.md)), so this write is
+[`bridge/docs/following-live.md`](https://github.com/openflowfm/bridge/blob/main/docs/following-live.md)), so this write is
 seen by the cursor watcher and re-reads that track. That's the intended behavior of that
 watcher and costs one track read, but it does mean clicking headers is not free.
 
