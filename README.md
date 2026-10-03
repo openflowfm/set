@@ -24,7 +24,7 @@ doc is self-contained, so the index below is meant to be enough to pick one and 
 | [scenes and roles](docs/scenes-and-roles.md) | the rail, the title fields, the role vocabulary, the role menu | `components/ScenePanel.tsx`, `Rail.tsx`, `Inspector.tsx`, `RoleMenu.tsx`, `SetConfigModal.tsx`, `TagChip.tsx`, `hooks/useSceneTitles.ts`, `useRoleAssignment.ts`, `useVocabulary.ts`, `useClipInspector.ts`, `useRailAndLog.ts` |
 | [color](docs/color.md) | swatches, song color, scene color, the palette | `components/SwatchGrid.tsx`, `ColorSelect.tsx`, `hooks/useSongColor.ts`, `useColorRules.ts`, `lib/allowedColors.ts` |
 | [moving scenes and clips](docs/moving.md) | either drag grip, the move plan, the drop indicator | `hooks/useSceneDrag.ts`, `useClipDrag.ts` |
-| [bulk workflows](docs/bulk-workflows.md) | the running order or coloring by rule | `components/ReorderModal.tsx`, `RecolorModal.tsx`, `BulkWorkflow.css` |
+| [bulk workflows](docs/bulk-workflows.md) | the running order, a new show, or coloring by rule | `components/ReorderModal.tsx`, `ShowModal.tsx`, `RecolorModal.tsx`, `BulkWorkflow.css` |
 | [the header](docs/header.md) | the Live control bar, transport state, glyphs | `components/Header.tsx`, `Icon.tsx`, `Control.tsx` |
 | [mixer panel](docs/mixer.md) | meters, faders, sends, the stop row | `components/ClipGrid/TrackMeter.tsx`, `TrackSends.tsx`, `useMeterResize.ts`, `hooks/useMixer.ts`, `useMeters.ts`, `lib/mixerStore.ts`, `meterScale.ts`, `liveParam.ts` |
 | [the device chain](docs/device-chain.md) | the footer showing a track's devices, what is watched, where a faceplate reads its controls, and how a write gets back | `components/DeviceChain.tsx`, `hooks/useDeviceChain.ts`, `lib/chainStore.ts`, `liveParam.ts` |
@@ -92,6 +92,7 @@ src/components/       a folder per component — see below; the flat pairs are t
   SetConfigModal.tsx  set-owned naming defaults + role definitions
   SongsModal.tsx      what the app read back out of the set — read-only
   ReorderModal.tsx    the running order — drag songs, apply once
+  ShowModal.tsx       a new show — type tonight's songs, keep those, delete the rest
   NewSongModal.tsx    plan and create a new song's scenes
   SyncModal.tsx       blocking feedback while the snapshot behind the grid is replaced
   TagChip.tsx         the outlined song-tag pill — song headers and the reorder modal

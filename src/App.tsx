@@ -11,6 +11,7 @@ import { RecolorModal } from './components/RecolorModal.tsx';
 import { ReorderModal } from './components/ReorderModal.tsx';
 import { RoleMenu } from './components/RoleMenu.tsx';
 import { SetConfigModal } from './components/SetConfigModal.tsx';
+import { ShowModal } from './components/ShowModal.tsx';
 import { ScenePanel } from './components/ScenePanel.tsx';
 import { SongIndex } from './components/SongIndex.tsx';
 import { SongsModal } from './components/SongsModal.tsx';
@@ -332,6 +333,8 @@ export function App() {
   // other modals: they act on set structure rather than only on a selection.
   const [addingSong, setAddingSong] = useState(false);
   const [reordering, setReordering] = useState(false);
+  // Opened only from the reorder modal, which it replaces rather than stacks on.
+  const [newShow, setNewShow] = useState(false);
   const [recoloring, setRecoloring] = useState(false);
 
   return (
@@ -612,7 +615,31 @@ export function App() {
             clearSelection();
             void bridge.moveScenes(plan, `reorder ${plan.scenes} scenes`);
           }}
+          onNewShow={() => {
+            setReordering(false);
+            setNewShow(true);
+          }}
           onClose={() => setReordering(false)}
+        />
+      )}
+
+      {newShow && snapshot && (
+        <ShowModal
+          derivation={derivation}
+          snapshot={snapshot}
+          palette={bridge.palette}
+          busy={bridge.busy}
+          // Closes and clears the selection on commit, for the reorder's reason:
+          // every scene index is about to mean a different row, or none.
+          onApply={(plan, deleted) => {
+            setNewShow(false);
+            clearSelection();
+            void bridge.keepScenes(
+              plan,
+              `new show — delete ${deleted.songs} song${deleted.songs === 1 ? '' : 's'}`,
+            );
+          }}
+          onClose={() => setNewShow(false)}
         />
       )}
 

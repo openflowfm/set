@@ -15,6 +15,7 @@ const TERMINAL = {
   apply: 'applied',
   addScenes: 'scenesAdded',
   move: 'moved',
+  keepScenes: 'scenesKept',
   moveClips: 'clipsMoved',
   palette: 'palette',
   clipNotes: 'clipNotes',

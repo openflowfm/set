@@ -1,6 +1,6 @@
 # Bulk workflows
 
-The set-wide song controls: the running order and coloring by rule — draft, preview, one write.
+The set-wide song controls: the running order, a new show and coloring by rule — draft, preview, one write.
 
 ## Set-wide song controls
 
@@ -60,6 +60,48 @@ scene index is about to mean a different row.
 It is one plan and one `move` message, not a move per song. Live's undo grouping is
 per-message, a half-applied order is the worst state this app can leave a set in, and
 `planSceneReorder` is what makes one plan possible — see [`core/docs/sceneMove.md`](https://github.com/openflowfm/core/blob/main/docs/sceneMove.md).
+
+### New show
+
+**Type tonight's songs, put them in order, Commit — and the set holds exactly those songs
+in that order.** **New show** in the running-order modal swaps it for a list that starts
+empty. Typing suggests the set's songs that aren't picked yet, case-insensitively: the
+exact name first, then names starting with what you typed, then names containing it,
+each group in set order. ↑/↓ move the highlight, Enter takes it (the first suggestion
+unless you moved) and clears the field, so a show is typed title by title without
+touching the mouse. Backspace in an empty field takes the last song back; Esc clears the
+field, and closes the modal only once the field is already empty, because closing
+throws the list away. The picked rows read like the running order's — position, bpm,
+key, name, tag — and are reordered by drag or ↑/↓, or taken out with ×.
+
+It starts blank on purpose. The running order is the whole set and every song survives;
+a show is a list of what you'll play, and **every song not named is deleted**. Writing
+it the other way round — tick off what to drop from a hundred rows — is how the one song
+you needed goes.
+
+What survives follows the running order's rules, because it is built by the same
+`orderScenes`: the picked songs in picked order, a song found in more than one run
+gathered into one, the unmapped scenes above the first song kept at the top, and an
+unmapped scene after a song **kept or deleted with that song**. `planSceneKeep`
+([`core/docs/sceneMove.md`](https://github.com/openflowfm/core/blob/main/docs/sceneMove.md))
+turns that order into one plan, and `keepScenes` sends it as one message, with every
+scene name of the snapshot it was planned against; the bridge refuses the plan if Live's
+names no longer match, so a set that changed under the modal costs an error line rather
+than the wrong scenes.
+
+- **Commit takes two presses.** The first arms it and the button says what it is about
+  to do — `Delete 34 songs — press again`. Any change to the list disarms it, so what
+  was armed is what runs.
+- **The cost is stated before it runs** — `describeKeep`'s line, plus how many songs and
+  scenes will be deleted — and Commit is disabled while the list is empty, or when the
+  set is already exactly this show.
+- **There is no undo of ours**, and the warning is permanent. `keepScenes` clears the
+  undo entry the way `moveScenes` does ([undo](undo.md)); the log says whether Live
+  grouped it into one step of its own history.
+- **A failure deletes nothing.** If any copy fails the bridge skips the whole delete
+  pass, so the set holds the new order's copies, the blank scenes and every original —
+  nothing is lost, and the log says so in red.
+- **Committing closes the modal and clears the selection**, as the running order does.
 
 ### Coloring by rule
 
