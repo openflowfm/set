@@ -31,7 +31,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@openflow/core": "github:openflowfm/core#2275586c35cd004e61d2401cdb098d2364b6ad47",
+    "@openflow/core": "github:openflowfm/core#cab988b3726cfd4f3f4d912282b9d7e4e5e4f0c9",
     "@openflow/desktop": "git+https://github.com/openflowfm/desktop.git#ff1b05d0f003281c0f3a10e1c096926719cc4285",
     "@openflow/protocol": "github:openflowfm/protocol#aa29aff5de81727df83db133507024fbb0da46fe",
     "@openflow/widgets": "git+https://github.com/openflowfm/widgets.git#dc356455e561c7eb9dce337a1e6b6810a5251fcb",
