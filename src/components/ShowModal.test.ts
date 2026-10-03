@@ -7,14 +7,16 @@ import { SCENE_PATTERNS } from '@openflow/core/namePattern.ts';
 import type { SceneKeepPlan } from '@openflow/core/sceneMove.ts';
 import { corpusSnapshot } from '../../test/corpus.ts';
 
-// The planner is another lane's, and a stub that throws at the commit this is
-// pinned to. What this spec pins is the modal's half: what it asks the planner
-// for, and what it does with the answer.
+// The real planner runs by default; a test swaps in an answer only to reach a
+// branch the real one won't take on this set (a throw, nothing to do).
 const planner = vi.hoisted(() => ({
   planSceneKeep: vi.fn(),
   describeKeep: vi.fn(),
 }));
 vi.mock('@openflow/core/sceneMove.ts', () => planner);
+const real = await vi.importActual<typeof import('@openflow/core/sceneMove.ts')>(
+  '@openflow/core/sceneMove.ts',
+);
 
 const { ShowModal, showOrder, suggestSongs, wirePlan } = await import('./ShowModal.tsx');
 
@@ -27,7 +29,7 @@ const songs = derivation.songs;
 const PLAN: SceneKeepPlan = {
   sceneCount: set.scenes.length,
   create: [0],
-  steps: [{ from: 5, to: 0 }] as SceneKeepPlan['steps'],
+  steps: [{ from: 5, to: 0, tracks: [] }],
   remove: [6, 4],
   keep: 2,
   moved: 1,
@@ -36,9 +38,38 @@ const PLAN: SceneKeepPlan = {
 };
 
 beforeEach(() => {
-  planner.planSceneKeep.mockReset().mockReturnValue(PLAN);
-  planner.describeKeep.mockReset().mockReturnValue('2 scenes · 3 clips copied');
+  planner.planSceneKeep.mockReset().mockImplementation(real.planSceneKeep);
+  planner.describeKeep.mockReset().mockImplementation(real.describeKeep);
 });
+
+/**
+ * What the bridge does with a plan, as array operations on the scene list:
+ * blanks at ascending `create`, each step copies, then `remove` in order.
+ * Each entry is the original index of the scene it holds.
+ */
+const replay = (wire: { sceneCount: number; create: number[]; steps: { from: number; to: number }[]; remove: number[] }) => {
+  const list: (number | null)[] = Array.from({ length: wire.sceneCount }, (_, i) => i);
+  for (const c of wire.create) list.splice(c, 0, null);
+  for (const { from, to } of wire.steps) {
+    expect(list[to]).toBeNull();
+    list[to] = list[from]!;
+  }
+  for (const r of wire.remove) list.splice(r, 1);
+  return list;
+};
+
+/** The show worked out from the derivation alone: head, then each song with its trailing unmapped scenes. */
+const expectedShow = (picked: string[]) => {
+  const head: number[] = [];
+  const bySong = new Map<string, number[]>();
+  let owner: string | null = null;
+  for (const sc of derivation.scenes) {
+    if (sc.song !== null) owner = songKey(sc.song);
+    if (owner === null) head.push(sc.s);
+    else bySong.set(owner, [...(bySong.get(owner) ?? []), sc.s]);
+  }
+  return [...head, ...picked.flatMap((k) => bySong.get(k) ?? [])];
+};
 
 const modal = () => {
   const props = {
@@ -221,11 +252,45 @@ describe('ShowModal', () => {
       clips: set.clips,
       tracks: set.tracks,
     });
-    const deleted = songs.length - 2;
-    expect(m.view.getByText(new RegExp(`3 clips copied · deletes ${deleted} songs, ${set.scenes.length - want.length} scenes`))).toBeTruthy();
+  });
+
+  it('commits a real plan that leaves exactly the picked songs, in picked order', () => {
+    const m = modal();
+    const picked = [songs[7]!, songs[2]!, songs[12]!];
+    for (const s of picked) pick(m, s.name);
+    const keys = picked.map((s) => songKey(s.name));
+    const deleted = songs.length - picked.length;
+
+    const want = expectedShow(keys);
+    const plan = real.planSceneKeep({
+      sceneCount: set.scenes.length,
+      order: want,
+      clips: set.clips,
+      tracks: set.tracks,
+    })!;
+    const cost = real.describeKeep(plan);
+    expect(
+      m.view.getByText(`${cost} · deletes ${deleted} songs, ${set.scenes.length - want.length} scenes`),
+    ).toBeTruthy();
+
+    fireEvent.click(m.commit());
+    fireEvent.click(m.commit());
+    expect(m.props.onApply).toHaveBeenCalledTimes(1);
+    const [wire, summary] = m.props.onApply.mock.calls[0]!;
+    expect(wire.sceneNames).toHaveLength(wire.sceneCount);
+    expect(wire.sceneCount).toBe(set.scenes.length);
+    expect(summary.songs).toBe(deleted);
+
+    const after = replay(wire);
+    expect(after).toEqual(want);
+    const survivors = new Set(
+      after.map((s) => derivation.scenes[s!]!.song).filter((n) => n !== null).map((n) => songKey(n!)),
+    );
+    expect([...survivors].sort()).toEqual([...keys].sort());
   });
 
   it('takes two presses to commit, and any change to the list disarms it', () => {
+    planner.planSceneKeep.mockReturnValue(PLAN);
     const m = modal();
     pick(m, songs[0]!.name);
     pick(m, songs[1]!.name);
@@ -241,10 +306,8 @@ describe('ShowModal', () => {
     fireEvent.click(m.commit());
     fireEvent.click(m.commit());
     expect(m.props.onApply).toHaveBeenCalledTimes(1);
-    const [wire, summary] = m.props.onApply.mock.calls[0]!;
+    const [wire] = m.props.onApply.mock.calls[0]!;
     expect(wire).toEqual(wirePlan(PLAN, set.scenes));
-    expect(wire.sceneNames).toHaveLength(set.scenes.length);
-    expect(summary.songs).toBe(deleted);
   });
 
   it('says why and stays disabled when the planner throws', () => {
