@@ -1,0 +1,52 @@
+/* --- new show ------------------------------------------------------- */
+
+/* The picked list reuses BulkWorkflow.css's .order-rows/.order-row, so a song
+   reads the same here as in the running order. Only the typeahead and the
+   armed Commit are this modal's own. */
+
+.show-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.show-input {
+  width: 100%;
+}
+
+/* In flow under the field rather than floating over the list: the list is what
+   you're building, and a popover would cover the last song you added. */
+.show-suggest {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+  background: var(--surface-control);
+}
+.show-option {
+  padding: 4px 8px;
+  font-variation-settings: var(--mono-axes);
+  font-size: var(--text-body);
+  color: var(--ui);
+  cursor: pointer;
+  border-bottom: 1px solid var(--bd2);
+}
+.show-option:last-child {
+  border-bottom: none;
+}
+.show-option.on {
+  background: var(--sel);
+  color: var(--fg);
+}
+
+.show-empty {
+  padding: 12px 8px;
+  border: 1px dashed var(--bd);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+/* The second press deletes songs. Marked the way .warn marks the no-undo line,
+   so the armed button reads as the same warning made actionable. */
+.show-armed {
+  box-shadow: 0 0 0 2px var(--amber);
+}

@@ -22,10 +22,11 @@ twice.
 `⌘Z` doesn't conflict with the ⌘-makes-a-sound rule below — it isn't a grid gesture, and
 it's guarded by `isTypingInto` so the rename field keeps its own undo.
 
-**Moving scenes has no undo here, and can't.** `inverseOps` works by reading "before" out
-of the snapshot, which holds every clip's name and color — and nothing that could rebuild a
-deleted scene's clips. So `moveScenes` *clears* the undo entry rather than replacing it:
-every scene index means something different afterwards, and a ⌘Z that wrote clip names
-against the wrong rows would be worse than no undo at all. The move asks Live to group
-itself into one step in Live's *own* history instead, and the log says whether Live agreed,
+**Moving scenes and keeping a new show have no undo here, and can't.** `inverseOps` works
+by reading "before" out of the snapshot, which holds every clip's name and color — and
+nothing that could rebuild a deleted scene's clips. `keepScenes` goes further and deletes
+the songs left out of the show outright. So `moveScenes` and `keepScenes` both *clear* the
+undo entry rather than replacing it: every scene index means something different
+afterwards, and a ⌘Z that wrote clip names against the wrong rows would be worse than no
+undo at all. Each write asks Live to group itself into one step in Live's *own* history instead, and the log says whether Live agreed,
 because that mechanism is undocumented and unverified.

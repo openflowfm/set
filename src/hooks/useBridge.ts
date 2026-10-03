@@ -130,6 +130,11 @@ export interface BridgeState {
    */
   moveScenes: (plan: MovePlanFor, label: string) => Promise<void>;
   /**
+   * Put a running order in place and delete every scene not in it — the new
+   * show. No undo of ours, for `moveScenes`' reason; clears the undo entry.
+   */
+  keepScenes: (plan: OpenFlow.KeepPlan, label: string) => Promise<void>;
+  /**
    * Move clips around the grid. **Also has no undo of ours** — it overwrites
    * whatever was at the target, and a snapshot can't rebuild an overwritten
    * clip any more than it can a deleted scene. Clears the undo entry.
@@ -964,6 +969,66 @@ export function useBridge(
   );
 
   /**
+   * A new show: the scenes in `plan` in their new order, and every other scene
+   * deleted.
+   *
+   * Not routed through `write`, and it clears the undo entry, for exactly
+   * `moveScenes`' reasons — only more so, since this one deletes songs outright.
+   * The plan carries the scene names of the snapshot it was built against, and
+   * the bridge refuses it unless Live still has those names, so a set that
+   * changed under the modal costs an `error` line rather than the wrong scenes.
+   *
+   * A failure here is a different mess from a move's: the bridge skips the
+   * whole delete pass, so the set holds the new order's copies, the blank
+   * scenes it created *and* every original. Nothing is lost, and the log says so.
+   */
+  const keepScenes = useCallback(
+    (plan: OpenFlow.KeepPlan, label: string) =>
+      guard(label, async () => {
+        undoRef.current = null;
+        setUndoDepth(0);
+
+        const e = await client.request({
+          type: 'keepScenes',
+          plan: {
+            sceneCount: plan.sceneCount,
+            create: plan.create,
+            steps: plan.steps,
+            remove: plan.remove,
+            sceneNames: plan.sceneNames,
+          },
+        });
+
+        if (e.failed > 0) {
+          say(
+            `${label} — ${e.failed} operation${e.failed > 1 ? 's' : ''} failed, so NOTHING ` +
+              `was deleted. The set now holds the new order's copies, ${e.created} blank ` +
+              `scene${e.created === 1 ? '' : 's'} and every original; check the Max window ` +
+              `and tidy up in Live.`,
+            'error',
+          );
+        } else {
+          say(
+            `${label} — ${e.removed} scene${e.removed === 1 ? '' : 's'} deleted, ` +
+              `${e.copied} clip${e.copied === 1 ? '' : 's'} copied in ${e.lomMs}ms`,
+            'ok',
+          );
+        }
+        say(
+          e.undoStep
+            ? "the new show is one step in Live's own undo history — ⌘Z in Live, not here"
+            : 'Live would not group the new show for undo, so there is no way back — ' +
+              'our ⌘Z cannot rebuild deleted scenes',
+          e.undoStep ? 'info' : 'error',
+        );
+
+        // As with `moveScenes`: the bridge broadcasts one structural change once
+        // the whole plan has landed, and that drives the re-read.
+      }),
+    [client, guard, say],
+  );
+
+  /**
    * The clip-drag counterpart to `moveScenes`, and it makes the same bargain
    * with undo for a slightly different reason. A scene move can't be reversed
    * because a snapshot can't rebuild a deleted scene's clips; a clip move can't
@@ -1060,6 +1125,7 @@ export function useBridge(
     applyScenes,
     addScenes,
     moveScenes,
+    keepScenes,
     moveClips,
     saveSetConfig,
     setAllowedColors,

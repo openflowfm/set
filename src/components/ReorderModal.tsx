@@ -27,6 +27,8 @@ interface Props {
   busy: boolean;
   /** Write the new order to Live. The one call in the app with no undo. */
   onApply: (plan: SceneMovePlan) => void;
+  /** Leave this for the new-show list: start blank, keep only what's named. */
+  onNewShow: () => void;
   onClose: () => void;
 }
 
@@ -79,7 +81,15 @@ function sortLabel(criterion: SongSortCriterion): string {
  * it: this is the one write no undo of ours can reverse, so what it will do has
  * to be readable before it runs rather than in the log afterwards.
  */
-export function ReorderModal({ derivation, snapshot, palette, busy, onApply, onClose }: Props) {
+export function ReorderModal({
+  derivation,
+  snapshot,
+  palette,
+  busy,
+  onApply,
+  onNewShow,
+  onClose,
+}: Props) {
   useCloseOnEscape(onClose);
 
   const setOrder = useMemo(() => derivation.songs.map((s) => songKey(s.name)), [derivation]);
@@ -448,6 +458,13 @@ export function ReorderModal({ derivation, snapshot, palette, busy, onApply, onC
             }}
           >
             Reset
+          </ControlButton>
+          <ControlButton
+            type="button"
+            title="Start a blank list, type tonight's songs, and delete every song not in it"
+            onClick={onNewShow}
+          >
+            New show
           </ControlButton>
           <div className="hint">{plan ? describeMove(plan) : 'nothing to move'}</div>
           <div className="spacer" />
