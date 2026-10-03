@@ -335,6 +335,9 @@ export function App() {
   const [reordering, setReordering] = useState(false);
   // Opened only from the reorder modal, which it replaces rather than stacks on.
   const [newShow, setNewShow] = useState(false);
+  // A disconnect drops the snapshot; close the modal then, so a reconnect
+  // doesn't bring it back over a list it no longer holds.
+  if (newShow && !snapshot) setNewShow(false);
   const [recoloring, setRecoloring] = useState(false);
 
   return (

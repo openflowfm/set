@@ -24,7 +24,7 @@ Everything else reads the same object back through `useBridgeSession()`. The
 separable pieces — the log
 (`useLog`) and the set-owned configuration (`useDeviceState`) — are their own hooks
 that it composes; the connection, the
-snapshot walk and the apply/undo/moveScenes write path stay together in
+snapshot walk and the apply/undo/moveScenes/keepScenes write path stay together in
 `useBridge` itself because they share `guard`, the snapshot ref and the undo
 entry. `guard()` wraps every operation so failures land in the log rather than
 as unhandled rejections.
@@ -192,7 +192,7 @@ being optimistic safe:
   Anything less and the walk is the only way to find out what actually happened.
 - **A clip move that reported a failure.** `lom.ts` skips the entire delete pass if any
   copy failed, so the set holds both copies — a state the plan doesn't describe.
-- **`moveScenes`, always.** It creates and deletes scenes, so every index below the edit
+- **`moveScenes` and `keepScenes`, always.** Each creates and deletes scenes, so every index below the edit
   means something different. That isn't a patch to the set we hold, it's a different set.
 - **`addScenes`, always.** It deletes nothing, but insertion still renumbers every scene
   below the gap. The bridge coalesces eight Live observer callbacks into one structural
