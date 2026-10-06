@@ -37,11 +37,16 @@ you aren't touching.
    `npm install 'github:openflowfm/<pkg>#<full-sha>'` here and commit manifest and lock
    together. **Never `npm link`** a sibling checkout: its React becomes a second copy in the
    renderer, and every `useContext` under it reads a null dispatcher.
-10. **Every commit made by an agent must include a GitHub-compatible Codex co-author
-    trailer**, after a blank line:
+10. **Every commit made by an agent must include a GitHub-compatible co-author
+    trailer naming the agent that actually made it**, after a blank line. Never name an
+    agent that didn't write the commit. For example:
 
     ```text
     Co-authored-by: Codex <noreply@openai.com>
+    ```
+
+    ```text
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
     ```
 
 ## Before you claim something works
