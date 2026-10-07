@@ -1,0 +1,25 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "ui"
+      ],
+      "port": 5373,
+      "autoPort": true
+    },
+    {
+      "name": "bench",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "bench"
+      ],
+      "port": 5473,
+      "autoPort": true
+    }
+  ]
+}

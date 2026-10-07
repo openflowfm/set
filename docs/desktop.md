@@ -86,11 +86,13 @@ server instead of on the scheme, so an edit lands in the window that ships with 
 intact — including the connection and the snapshot behind it, which is the whole argument in
 [`dev-server.md`](dev-server.md).
 
-`npm run watch` starts both halves together and is the one to type; `npm run dev` alone
-needs a dev server already up (`npm run ui`) and starts none. The switches and the retry are [`window.md`](https://github.com/openflowfm/desktop/blob/main/docs/window.md); the port
-comes from `OPENFLOW_PORT_BASE` plus this app's offset in `desktop/src/apps.ts`, so a
-worktree that moved its servers takes the app with it rather than being the one thing left
-behind.
+`npm run dev` starts both halves together (`npm run watch` is the same command by its older
+name). The switches and the retry are [`window.md`](https://github.com/openflowfm/desktop/blob/main/docs/window.md).
+No port is assumed: vite takes `PORT` or a free one from the OS, `tools/app.ts` reads the
+port it landed on off the socket, and hands the window `OPENFLOW_DEV_URL` and
+`OPENFLOW_SET_UI_PORT` — so every worktree gets its own server, and its own dev profile
+keyed by that port, with nothing to configure. To open a window onto a dev server that is
+already up, set `OPENFLOW_DEV_URL` and `npm run dev` starts none.
 
 Three things differ from `npm start`, all of them on purpose:
 
@@ -98,7 +100,7 @@ Three things differ from `npm start`, all of them on purpose:
   came from, and vite's `/ws` proxy carries it — so the app reaches whatever device its dev
   server was configured for, rather than whatever this process guessed. It is also what
   makes several worktrees on one device work here exactly as they do in a browser.
-- **A different `localStorage` bucket**, because `http://localhost:5173` is a different
+- **A different `localStorage` bucket**, because `http://localhost:<port>` is a different
   origin from `set://app` and storage is keyed by origin. The same split a browser already
   has: column widths set in dev are not the ones the real app opens with.
 - **The title says `— dev`.**

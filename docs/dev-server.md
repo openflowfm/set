@@ -5,22 +5,30 @@ Running the dev server, and what a hot update costs — why BridgeProvider sits 
 ## Dev
 
 ```sh
-npm run watch      # its dev server and its window, one command — the one to type
-npm run ui         # the dev server alone, against a device someone else is running
-npm run dev        # the window alone, pointed at a dev server that is already up
+npm run dev        # its dev server and its window, one command — the one to type
+npm run watch      # the same, by its older name
+npm run ui         # the dev server alone, for a browser
 npm run bench      # the device bench, with no connection at all
 npm start          # the desktop app, on the built output — see docs/desktop.md
 ```
 
-Use **<http://localhost:5173>** for the dev loop — in a browser, or in `npm run dev`,
-which is the same page inside the window that ships. Vite proxies `/ws` through to the
-device, so you get HMR with React Fast Refresh — and, more to the point, a loaded snapshot
-that survives your edits. A walk is ~950ms of Live's main thread; an edit to a CSS
-variable must not spend it.
+**No dev port is fixed or assumed.** Many projects and worktrees run side by side, and a
+number like vite's 5173 is one somebody else is already on. Every dev server here takes
+`PORT` when a launcher picked one (`.claude/launch.json`, with `autoPort`), and otherwise
+port `0`, so the OS hands out a free one; vite prints where it landed. `strictPort` is on
+only when a port was named — whoever named it is going to dial it.
 
-`dev:set` starts both and takes both down together. `dev:set-app` needs a dev server
-already running and does not start one; it retries until one answers rather than leaving a
-window on a connection error, which is what makes it safe to run against `npm run dev`. What it changes and what it
+Use the URL vite prints for the dev loop — in a browser, or in `npm run dev`, which is the
+same page inside the window that ships. Vite proxies `/ws` through to the device, so you
+get HMR with React Fast Refresh — and, more to the point, a loaded snapshot that survives
+your edits. A walk is ~950ms of Live's main thread; an edit to a CSS variable must not
+spend it.
+
+`npm run dev` runs vite inside `tools/app.ts`, reads the port it bound off the socket, and
+starts the window with `OPENFLOW_DEV_URL` and `OPENFLOW_SET_UI_PORT` set to it. Closing the
+window takes vite down with it. With `OPENFLOW_DEV_URL` already set it starts no server and
+opens onto that one — a second window onto a running `npm run ui`. The window retries until
+the page answers rather than leaving a connection error. What it changes and what it
 deliberately doesn't — the bridge URL, the `localStorage` bucket, the title — is in
 [`desktop.md`](desktop.md).
 
@@ -73,25 +81,20 @@ Environment variables, all optional:
 
 | var | default | for |
 |---|---|---|
-| `OPENFLOW_PORT_BASE` | `5173` | **every** dev server counts from this — one per worktree |
-| `OPENFLOW_SET_UI_PORT` | from `OPENFLOW_PORT_BASE` | moving this one app without moving the base; every app has the same variable under its own name |
-| `OPENFLOW_BENCH_PORT` | `OPENFLOW_PORT_BASE` + 100 | used in the separate Widgets checkout to override its bench port |
-| `OPENFLOW_DEVICE_BENCH_PORT` | `OPENFLOW_PORT_BASE` + 200 | the same, for the device bench |
+| `PORT` | unset — a free port | the port a launcher picked, for the app's dev server or the device bench |
+| `OPENFLOW_SET_UI_PORT` | `PORT`, else a free port | this app's dev server alone; set by `npm run dev` for the window, which keys its dev profile by it |
 | `OPENFLOW_BRIDGE` | `http://127.0.0.1:17800` | pointing at a device other than the local one |
 | `OPENFLOW_DEV` | unset | read by the **app**, not by vite: open on the dev server instead of the bundle |
-| `OPENFLOW_DEV_URL` | from `OPENFLOW_PORT_BASE` | the same, at an address this could not have worked out |
+| `OPENFLOW_DEV_URL` | set by `npm run dev` | the address the window opens onto; set it yourself to open onto a server already running |
 
-The offsets themselves are `desktop/src/apps.ts` now, read by the app and by its vite config
+The rule is `desktop/src/apps.ts`'s `uiPort()`, read by the app and by its vite config
 alike — see [`desktop/docs/registry.md`](https://github.com/openflowfm/desktop/blob/main/docs/registry.md).
+The bridge's `17800` is not a dev port: it is the device's, and other machines dial it.
 
-`strictPort` is on, so a port collision fails loudly instead of drifting to the next
-free one. That's deliberate: assign the port, don't discover it.
-
-The device bench uses base + 200. The independent Widgets bench retains base + 100
-when launched in its own checkout with the same environment. Offsets use hundreds
-because worktree base ports are picked adjacently. Run `npm ci` and `npm run dev`
-in [Widgets](https://github.com/openflowfm/widgets); this repository's dev stack
-starts only the device bench. See its [bench guide](https://github.com/openflowfm/widgets/blob/main/docs/bench.md).
+The device bench needs nothing from the dev server, so it takes `PORT` or a free port of
+its own. The Widgets bench lives in [Widgets](https://github.com/openflowfm/widgets) — run
+`npm ci` and `npm run dev` there; this repository's dev stack starts only the device bench.
+See its [bench guide](https://github.com/openflowfm/widgets/blob/main/docs/bench.md).
 
 The device bench is `set/bench/`, served by `set/vite.bench.config.ts`. It draws the faces
 with the app's palette and no connection at all — no provider, no client, no socket — so

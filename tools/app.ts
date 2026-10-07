@@ -9,14 +9,14 @@
 //   electron  main, preload and the server, with esbuild
 //   icons     the .icns, from public/mark.svg
 //   run       build, electron, and open it
-//   watch     the dev server and the window, together — the one to type
-//   dev       electron, and open it against a dev server that is already up
-//   pack      build, electron, icons, and electron-builder
+//   dev       the dev server and the window, together — the one to type
+//   watch     the same as dev, by its older name
+//   pack     build, electron, icons, and electron-builder
 //
 // Anything that looks like a flag is handed to electron-builder, which is what
 // keeps `npm run pack -- -c.mac.identity="Developer ID Application: …"` working.
 
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -90,42 +90,57 @@ function open(): void {
 /**
  * Working on it: the dev server and the window, in one command.
  *
- * `watch` is `dev` plus the vite server `dev` refuses to start, and it is the
- * thing to type.
+ * Vite runs in this process rather than beside it, because no dev port is
+ * assumed: it takes `OPENFLOW_SET_UI_PORT` or `PORT` when a launcher picked
+ * one and otherwise a free port from the OS (`vite.config.ts`), so the only
+ * place that knows where it landed is its own socket. That port is read off it
+ * and handed to the window as `OPENFLOW_DEV_URL` to open onto and
+ * `OPENFLOW_SET_UI_PORT` to key its dev profile by (`@openflow/desktop`'s
+ * `state.ts`). set[flow] has no reach, so there is no reach port to hand on.
  *
- * `-k` is what makes it one command rather than two in a trench coat: closing
- * the window takes vite with it, and a vite that cannot bind takes the
- * window's retry loop with it rather than leaving it asking forever.
- */
-function watch(): void {
-  const quoted = (what: string) => `"${what}"`;
-  run(bin('concurrently'), [
-    '-k',
-    '-n',
-    'set-ui,set-app',
-    '-c',
-    'gray,green',
-    `${quoted(bin('vite'))} --config vite.config.ts`,
-    [
-      quoted(process.execPath),
-      '--disable-warning=ExperimentalWarning',
-      quoted(path.join(root, 'tools', 'app.ts')),
-      'dev',
-    ].join(' '),
-  ]);
-}
-
-/**
- * The window, on a dev server somebody else is running.
+ * With `OPENFLOW_DEV_URL` already set, the dev server is somebody else's — a
+ * second window onto one server — and this starts none.
  *
- * It does not start one: the dev server is `watch`'s to own, and an app that
- * started its own would race it for the port. What this does is rebuild the
- * main process — which vite knows nothing about — and open onto whatever is
- * there, retrying until it answers.
+ * One command rather than two in a trench coat: closing the window takes vite
+ * with it, and a vite that cannot bind exits before any window opens.
  */
-function dev(): void {
+async function dev(): Promise<void> {
   electron();
-  run(bin('electron'), ['.'], { OPENFLOW_DEV: '1' });
+  const given = process.env.OPENFLOW_DEV_URL;
+  let server: { close(): Promise<void> } | undefined;
+  let url: string;
+  if (given) {
+    url = given;
+  } else {
+    const { createServer } = await import('vite');
+    const vite = await createServer({ configFile: path.join(root, 'vite.config.ts') });
+    server = vite;
+    await vite.listen();
+    const address = vite.httpServer?.address();
+    if (!address || typeof address === 'string') {
+      await vite.close();
+      throw new Error('app: vite is listening but its socket names no port');
+    }
+    url = `http://localhost:${address.port}`;
+    vite.printUrls();
+  }
+  const port = new URL(url).port;
+  const window = spawn(bin('electron'), ['.'], {
+    cwd: root,
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      OPENFLOW_DEV: '1',
+      OPENFLOW_DEV_URL: url,
+      ...(port ? { OPENFLOW_SET_UI_PORT: port } : {}),
+    },
+  });
+  const stop = () => window.kill('SIGTERM');
+  process.on('SIGINT', stop);
+  process.on('SIGTERM', stop);
+  window.on('exit', (code) => {
+    void (server?.close() ?? Promise.resolve()).finally(() => process.exit(code ?? 0));
+  });
 }
 
 const [command, ...rest] = process.argv.slice(2);
@@ -153,10 +168,8 @@ switch (command) {
     open();
     break;
   case 'watch':
-    watch();
-    break;
   case 'dev':
-    dev();
+    await dev();
     break;
   default:
     console.error(

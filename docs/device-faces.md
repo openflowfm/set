@@ -102,7 +102,7 @@ write; remembering what it was pointed at is not yet possible.
 
 ## The device bench
 
-`npm run bench`, on the UI's port + 200. It draws every face in this folder with the
+`npm run bench`, on `PORT` or a free port — vite prints which. It draws every face in this folder with the
 app's palette and **no connection at all** — no provider, no client, no socket.
 
 That works because a face takes a `ChainDevice` and a list of parameters and nothing else,

@@ -9,16 +9,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // One bridge, many set[flow] dev servers. Each worktree runs its own on its own port
 // and proxies through to the same device, so several share one Live session — which
 // is the multi-client case the bridge is meant to serve anyway.
-//
-// strictPort stays on deliberately: a dev server that silently drifts to the next
-// free port is worse than one that fails, because nothing downstream can then say
-// which URL it ended up on.
 const BRIDGE = process.env.OPENFLOW_BRIDGE || 'http://127.0.0.1:17800';
-// `OPENFLOW_PORT_BASE` is what every dev server in the repo counts from, and
-// each app's offset from it is `@openflow/desktop/apps.ts` — set[flow] is just the one
-// that sits on the base itself. The two benches are still counted here, at +100
-// and +200, because neither is an app. One variable moves a whole worktree out
-// of the way of the next.
+// No dev port is assumed (`@openflow/desktop/apps.ts`): `OPENFLOW_SET_UI_PORT`
+// or `PORT` when a launcher picked one, otherwise `0` and the OS hands out a
+// free one. `npm run dev` reads the port vite settled on off the socket and
+// tells the window — nothing has to work it out.
 const PORT = uiPort(APPS.set);
 
 export default defineConfig({
@@ -38,7 +33,9 @@ export default defineConfig({
   },
   server: {
     port: PORT,
-    strictPort: true,
+    // Strict only when a port was named: whoever named it is going to dial it,
+    // so drifting to the next one would leave them on the wrong server.
+    strictPort: PORT !== 0,
     // Dev serves the app here but the bridge stays authoritative for data.
     //
     proxy: {

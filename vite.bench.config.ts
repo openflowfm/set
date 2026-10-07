@@ -11,11 +11,10 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 //
 // Never built, like the widget bench: no `outDir`, nothing in `bench/` ships.
 //
-// The port follows set[flow]'s the way the widget bench's does, at +200 rather
-// than +100 so the two benches of one worktree can't collide with the app of
-// the next — worktree ports get picked adjacently.
-const SET_PORT = Number(process.env.OPENFLOW_PORT_BASE) || 5173;
-const PORT = Number(process.env.OPENFLOW_DEVICE_BENCH_PORT) || SET_PORT + 200;
+// No port is assumed: `PORT` when a launcher picked one, otherwise `0` and the
+// OS hands out a free one, which vite prints. The bench never talks to the dev
+// server, so it has no other port to know.
+const PORT = Number(process.env.PORT) || 0;
 
 export default defineConfig({
   root: path.resolve(here, 'bench'),
@@ -25,7 +24,7 @@ export default defineConfig({
   cacheDir: path.resolve(here, 'node_modules/.vite/devices'),
   server: {
     port: PORT,
-    strictPort: true,
+    strictPort: PORT !== 0,
     // The bench reaches up into `src` for the faces, so the root is the repo.
     fs: { allow: [here] },
   },

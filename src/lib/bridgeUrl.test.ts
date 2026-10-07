@@ -19,15 +19,15 @@ describe('where the bridge is', () => {
   });
 
   it('falls back to the origin the page came from, which is the dev proxy', () => {
-    vi.stubGlobal('location', { host: 'localhost:5173' });
-    expect(bridgeUrl()).toBe('ws://localhost:5173/ws');
+    vi.stubGlobal('location', { host: 'localhost:61234' });
+    expect(bridgeUrl()).toBe('ws://localhost:61234/ws');
   });
 
   it('treats a preload that found no address as no address', () => {
     // A flag that never arrived leaves an empty string, and dialling `ws:///ws`
     // is a worse failure than falling back.
     vi.stubGlobal('openflow', { bridge: '' });
-    vi.stubGlobal('location', { host: 'localhost:5173' });
-    expect(bridgeUrl()).toBe('ws://localhost:5173/ws');
+    vi.stubGlobal('location', { host: 'localhost:61234' });
+    expect(bridgeUrl()).toBe('ws://localhost:61234/ws');
   });
 });
