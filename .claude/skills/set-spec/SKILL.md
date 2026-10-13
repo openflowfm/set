@@ -1,11 +1,11 @@
 ---
 name: set-spec
-description: Write a regression spec for one file  Use when adding tests to set/src — a hook, a component or a lib helper — or when asked to raise . Drives specs from the recorded corpus and gates them on mutation score rather than coverage.
+description: Write a regression spec for one file. Use when adding tests to src/ — a hook, a component or a lib helper — or when asked to raise a file's mutation score. Drives specs from the recorded corpus and gates them on mutation score rather than coverage.
 ---
 
 # Writing a spec in set/
 
-**These specs are a regression net, not a specification.** The behaviour  has been
+**These specs are a regression net, not a specification.** The behaviour has been
 validated in the app; you are recording it so a later change cannot alter it unnoticed. You
 are not deciding whether it is correct, and `docs/` is not your oracle — it describes
 intent, and intent is not what you are pinning.

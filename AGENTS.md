@@ -49,16 +49,20 @@ you aren't touching.
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
     ```
 
-## Before you claim something works
+## Checks
 
-```sh
-npm run typecheck        # the renderer and the Electron main
-npm test                 # the unit tests — the corpus under test/ is real sessions
-npm run mutate -- <file> # would its spec notice the file changing? see .claude/skills/set-spec
-npm run record -- <name> # a real session into test/corpus/ — needs Live and the device
-npm run build            # dist/ and the Electron bundle
-npm run dev              # the dev server and the window — needs a running bridge
-```
+| Command | What it checks | When to run |
+| --- | --- | --- |
+| `npm run build` | `dist/` and the Electron bundle | after any change |
+| `npm run typecheck` | the renderer and the Electron main | after any change |
+| `npm test` | the unit tests — the corpus under `test/` is real sessions | in a test pass (when asked, or before a PR) and on CI |
+| `npm run mutate -- <file>` | would its spec notice the file changing? see `.claude/skills/set-spec` | when writing a spec for that file |
+| `npm run record -- <name>` | a real session into `test/corpus/` — needs Live and the device | when asked to re-record the corpus |
+| `npm run dev` | the dev server and the window — needs a running bridge | to check a change against a real set |
+
+A change runs only `npm run build` and `npm run typecheck`. Specs are written as their
+own step (see `set-spec`), not as part of a change; if an existing test breaks, the next
+test pass or CI catches it.
 
 The bridge is [openflowfm/bridge](https://github.com/openflowfm/bridge). If a change
 depends on what Live sends, say plainly what was checked against a real set and what
