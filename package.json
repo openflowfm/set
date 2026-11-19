@@ -46,7 +46,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "5.0.0",
     "@vitest/ui": "5.0.0",
-    "electron": "44.2.0",
+    "electron": "44.11.5",
     "electron-builder": "26.15.3",
     "esbuild": "^0.28.2",
     "happy-dom": "^20.14.0",
